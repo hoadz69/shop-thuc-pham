@@ -36,7 +36,7 @@
 - Create: `tests/powershell/Project.Common.Tests.ps1`
 - Modify: `config/local.example.ps1`
 
-- [ ] **Step 1: Viết test thất bại cho cấu hình bắt buộc**
+- [x] **Step 1: Viết test thất bại cho cấu hình bắt buộc**
 
 Test phải dot-source thư viện, tạo một file cấu hình tạm thiếu `ProjectHostKey`, gọi `Import-ProjectConfig`, và xác nhận lỗi chứa `ProjectHostKey`. Test thứ hai truyền `ProjectWebRoot=/` và xác nhận bị từ chối.
 
@@ -55,17 +55,17 @@ Describe 'Import-ProjectConfig' {
 }
 ```
 
-- [ ] **Step 2: Chạy test và xác nhận đỏ**
+- [x] **Step 2: Chạy test và xác nhận đỏ**
 
 Run: `Invoke-Pester tests/powershell/Project.Common.Tests.ps1 -Output Detailed`
 
 Expected: FAIL vì `Import-ProjectConfig` chưa tồn tại.
 
-- [ ] **Step 3: Cài đặt tối thiểu thư viện**
+- [x] **Step 3: Cài đặt tối thiểu thư viện**
 
 `Import-ProjectConfig` phải nạp file trong scope riêng, trả về object chỉ chứa sáu trường public, kiểm tra key tồn tại, port bằng `2222`, key file có thật, fingerprint bắt đầu bằng `SHA256:` và web root khớp `^/www/wwwroot/[^/]+$`. `Invoke-ProjectSsh` và `Copy-ProjectScp` phải dùng argument array, ghim fingerprint và không nối secret vào output.
 
-- [ ] **Step 4: Chạy test và kiểm tra secret hygiene**
+- [x] **Step 4: Chạy test và kiểm tra secret hygiene**
 
 Run: `Invoke-Pester tests/powershell/Project.Common.Tests.ps1 -Output Detailed`
 
@@ -75,7 +75,7 @@ Run: `git grep -nEi '(password|private.?key|token)\s*[=:]\s*[^<$]' -- ':!docs/pr
 
 Expected: không có credential thật; comment và tên biến cấu hình mẫu được phép sau khi xem thủ công.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```powershell
 git add config/local.example.ps1 scripts/lib/Project.Common.ps1 tests/powershell/Project.Common.Tests.ps1
