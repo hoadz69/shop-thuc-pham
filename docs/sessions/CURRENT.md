@@ -5,14 +5,15 @@ Cập nhật: 2026-09-09, múi giờ Asia/Ho_Chi_Minh.
 ## Sau khi khởi động lại máy
 
 - Mở Codex với workspace tuyệt đối: `E:\Projects\thuc-pham-thuy-trang`.
-- Gửi yêu cầu: `Đọc AGENTS.md và docs/sessions/CURRENT.md, kiểm tra Git rồi tiếp tục đúng bước tiếp theo.`
+- Chỉ cần gửi: `Đọc AGENTS.md và docs/sessions/CURRENT.md, kiểm tra Git rồi làm tiếp đúng Bước tiếp theo.`
 - Repository ở ổ E là bản làm việc chính. Bản cũ ở ổ C chỉ là dự phòng và không được chỉnh song song.
 - File `config/local.ps1` ở bản ổ E chứa metadata kết nối riêng của máy và bị Git ignore.
 - Private key vẫn nằm ngoài repository tại đường dẫn được tham chiếu trong `config/local.ps1`.
+- Trên máy ở nhà: clone nhánh `main` từ `https://github.com/hoadz69/shop-thuc-pham.git`, tự tạo `config/local.ps1` từ file example và chép/private-key path riêng; hai file nhạy cảm này không có trong Git.
 
 ## Mục tiêu đang thực hiện
 
-Đang thực thi liên tục implementation plan 14 task để hoàn thiện và deploy bản website chạy qua IP hiện tại. Task 1 đã hoàn thành; mọi thay đổi VPS vẫn bị chặn cho đến khi baseline backup ngoài VPS được tạo và xác minh.
+Implementation plan có đúng 14 task. Task 1–13 đã hoàn thành; Task 14 Step 1 đã xong và Step 2–5 đang chờ domain, quyền DNS/SSL cùng maintenance window. Website IP hiện đã deploy để kiểm tra bằng mắt.
 
 ## Phiên đang làm
 
