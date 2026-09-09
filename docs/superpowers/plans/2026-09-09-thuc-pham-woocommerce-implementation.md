@@ -90,21 +90,21 @@ git commit -m "build: add safe server connection helpers"
 - Create: `tests/powershell/ServerInventory.Tests.ps1`
 - Modify: `docs/server-inventory.md`
 
-- [ ] **Step 1: Viết test thất bại cho các lệnh chỉ đọc**
+- [x] **Step 1: Viết test thất bại cho các lệnh chỉ đọc**
 
 Mock `Invoke-ProjectSsh`; xác nhận script gọi `df -P`, `stat`, đọc phiên bản WordPress, liệt kê theme/plugin, đếm product/order/page/upload và không chứa `rm`, `mv`, `sed -i`, `wp option update`, `wp plugin install`.
 
-- [ ] **Step 2: Chạy test và xác nhận đỏ**
+- [x] **Step 2: Chạy test và xác nhận đỏ**
 
 Run: `Invoke-Pester tests/powershell/ServerInventory.Tests.ps1 -Output Detailed`
 
 Expected: FAIL vì hai script chưa tồn tại.
 
-- [ ] **Step 3: Cài preflight và inventory**
+- [x] **Step 3: Cài preflight và inventory**
 
 `Test-Connection.ps1` phải xác minh hostname, UID, disk free, web root, owner/group và các binary hiện có. `Get-ServerInventory.ps1` phải trả JSON về stdout; chỉ tham số `-UpdateDoc` mới ghi phần “Khảo sát tự động gần nhất” vào inventory local.
 
-- [ ] **Step 4: Chạy offline tests rồi khảo sát server**
+- [x] **Step 4: Chạy offline tests rồi khảo sát server**
 
 Run: `Invoke-Pester tests/powershell/ServerInventory.Tests.ps1 -Output Detailed`
 
@@ -118,7 +118,7 @@ Run: `pwsh -File scripts/Get-ServerInventory.ps1 -UpdateDoc`
 
 Expected: số liệu khớp hoặc mọi drift được ghi rõ, không có secret.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```powershell
 git add scripts/Test-Connection.ps1 scripts/Get-ServerInventory.ps1 tests/powershell/ServerInventory.Tests.ps1 docs/server-inventory.md

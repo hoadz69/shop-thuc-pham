@@ -51,3 +51,47 @@ PHP CLI báo một số module đã được nạp lặp (`OPcache`, `zip`, `mbs
 - Database thực tế có đúng tên `wp_shop` và backup/restore được hay không, không ghi thông tin đăng nhập ra log.
 - Cấu hình backup scheduler của aaPanel.
 - Nginx vhost, cron, PHP-FPM và trạng thái HTTPS khi domain được cấp.
+
+<!-- AUTO-INVENTORY:START -->
+## Khảo sát tự động gần nhất
+
+``json
+{
+  "collectedAtUtc": "2026-09-09T04:13:06Z",
+  "webRoot": "/www/wwwroot/103.77.240.28",
+  "disk": "7168368/51485444/41679504",
+  "rootStat": "www:www:755",
+  "sourceBytes": 183128389,
+  "wordpressVersion": "7.1",
+  "siteUrl": "http://103.77.240.28",
+  "homeUrl": "http://103.77.240.28",
+  "activeTheme": "twentytwentyfive",
+  "themes": [
+    "twentytwentyfive",
+    "twentytwentyfour",
+    "twentytwentythree",
+    "twentytwentytwo"
+  ],
+  "plugins": [
+    {
+      "name": "akismet",
+      "active": false
+    },
+    {
+      "name": "hello",
+      "active": false
+    },
+    {
+      "name": "woocommerce",
+      "active": true
+    }
+  ],
+  "counts": {
+    "products": 0,
+    "orders": 0,
+    "pages": 5
+  },
+  "uploadFiles": 12
+}
+```
+<!-- AUTO-INVENTORY:END -->

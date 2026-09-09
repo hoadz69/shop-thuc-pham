@@ -16,6 +16,8 @@ Cập nhật: 2026-09-09, múi giờ Asia/Ho_Chi_Minh.
 
 ## Phiên đang làm
 
+- Phiên 2026-09-09 hiện tại: tiếp tục từ Task 2 đến khi có giao diện deploy trên VPS để người dùng kiểm tra bằng mắt; giữ nguyên `.git`, `config/local.ps1` và không ghi đè thay đổi không rõ nguồn gốc.
+- Working tree được xác nhận sạch trên `main` trước khi bắt đầu. Mọi khảo sát VPS vẫn chỉ đọc cho đến khi baseline backup ngoài VPS vượt qua kiểm tra checksum/cấu trúc.
 - Đã đọc lại `AGENTS.md`, handoff, server inventory, project brief, runbook và thiết kế đã duyệt.
 - Git ở nhánh `main`, commit gần nhất trước khi hoàn thiện plan là `d87401e`; các thay đổi tài liệu dang dở đã được rà soát và tiếp tục, không bị ghi đè.
 - Đã nạp `config/local.ps1` mà không in secret; mọi khảo sát server tiếp theo vẫn phải chỉ đọc cho đến khi baseline backup được tạo và xác minh.
@@ -46,6 +48,8 @@ Cập nhật: 2026-09-09, múi giờ Asia/Ho_Chi_Minh.
 - Chu kỳ TDD cho fix review: RED 16 pass/4 fail đúng bốn hành vi thiếu; GREEN 20 pass/0 fail bằng Pester 6.1.0. Fingerprint trong `config/local.ps1` thật khớp grammar mới khi kiểm tra boolean, không in giá trị. Commit fix: `fix: harden server connection helpers` (chính commit chứa handoff này; xem `git log -1`).
 - Sau review vòng hai, regex web root và fingerprint dùng `\z` để cấm LF cuối; fingerprint dùng so khớp phân biệt hoa thường và chỉ chấp nhận prefix chính xác `SHA256:`. Chu kỳ TDD: RED 19 pass/3 fail đúng ba boundary case; GREEN 22 pass/0 fail bằng Pester 6.1.0. Commit fix: `fix: enforce strict config boundaries` (chính commit chứa handoff này; xem `git log -1`).
 - Task 1 đã qua review yêu cầu và review chất lượng độc lập; không còn issue Critical/Important/Minor. Checkbox Task 1 trong implementation plan đã được đánh dấu để phiên mới tiếp tục đúng Task 2.
+- Task 2 đã thêm preflight và inventory chỉ đọc có thể lặp lại. TDD: RED 0/3 do script chưa tồn tại; GREEN 3/3 bằng Pester 6.1.0. Khảo sát thật xác nhận host `hoadz98`, UID 0, web root `www:www:755`, còn 41.679.504 KiB, các binary backup có sẵn và WP-CLI chưa có.
+- Inventory tự động lúc `2026-09-09T04:13:06Z`: WordPress 7.1, theme `twentytwentyfive`, WooCommerce bật, Akismet/Hello tắt, 0 sản phẩm, 0 đơn kiểu post, 5 trang và 12 upload. PHP CLI vẫn báo OPcache/zip/mbstring nạp lặp; chưa thay đổi server.
 
 ## Hiện trạng quan trọng
 
@@ -56,9 +60,8 @@ Cập nhật: 2026-09-09, múi giờ Asia/Ho_Chi_Minh.
 
 ## Bước tiếp theo
 
-1. Thực hiện Task 2: tự động hóa preflight/inventory chỉ đọc bằng các helper đã kiểm thử ở Task 1.
-2. Thực hiện Task 3–4: tạo baseline backup database + uploads/source, tải bản ngoài VPS và xác minh checksum/cấu trúc.
-3. Chỉ sau khi backup đạt mới cài WP-CLI và bắt đầu thay đổi WordPress theo Task 5 trở đi.
+1. Thực hiện Task 3–4: tạo baseline backup database + uploads/source, tải bản ngoài VPS và xác minh checksum/cấu trúc.
+2. Chỉ sau khi backup đạt mới cài WP-CLI và bắt đầu thay đổi WordPress theo Task 5 trở đi.
 
 ## Việc chưa chốt
 
