@@ -570,7 +570,7 @@ git commit -m "test: verify storefront and COD checkout"
 - Modify: `docs/sessions/CURRENT.md`
 - Modify: `config/local.example.ps1`
 
-- [ ] **Step 1: Ghi preconditions không gây thay đổi**
+- [x] **Step 1: Ghi preconditions không gây thay đổi**
 
 Runbook yêu cầu domain thuộc quyền người dùng, DNS đã trỏ đúng, quyền aaPanel/registrar hoặc Cloudflare, backup mới đã xác minh và maintenance window. Nếu thiếu bất kỳ điều kiện nào, dừng ở đây; website IP vẫn vận hành và PWA/QR chỉ ở trạng thái thử.
 
