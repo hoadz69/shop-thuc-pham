@@ -540,21 +540,21 @@ git commit -m "feat: configure PWA with HTTPS readiness checks"
 - Create: `tests/e2e/cod-checkout.md`
 - Create: `docs/operations/acceptance-report.md`
 
-- [ ] **Step 1: Viết checklist test có dữ liệu cụ thể**
+- [x] **Step 1: Viết checklist test có dữ liệu cụ thể**
 
 Checkout test dùng một SKU mẫu, số lượng 1, địa chỉ kiểm thử rõ ràng, COD; ghi order ID vừa tạo. Xác nhận subtotal/total VNĐ, validation trường bắt buộc, gateway COD duy nhất, order xuất hiện trong Admin và không lưu thông tin kiểm thử lâu hơn cần thiết.
 
-- [ ] **Step 2: Chạy regression tự động**
+- [x] **Step 2: Chạy regression tự động**
 
 Run: `pwsh -File scripts/Smoke-Test.ps1 -Scope All`
 
 Expected: homepage/shop/category/product/cart/checkout HTTP 200; catalog count 12; child theme/plugin active; QR payload đúng; manifest có cấu trúc; không có PHP fatal mới.
 
-- [ ] **Step 3: Chạy checkout thủ công desktop/mobile**
+- [x] **Step 3: Chạy checkout thủ công desktop/mobile**
 
 Tạo đúng một order COD test, xác nhận trong Admin, chuyển trạng thái theo quy trình, chụp bằng chứng không chứa dữ liệu nhạy cảm, rồi xóa/anonymize đúng order ID test nếu chính sách cho phép.
 
-- [ ] **Step 4: Ghi acceptance report và commit**
+- [x] **Step 4: Ghi acceptance report và commit**
 
 ```powershell
 git add scripts/Smoke-Test.ps1 tests/powershell/SmokeTest.Tests.ps1 tests/e2e/cod-checkout.md docs/operations/acceptance-report.md
