@@ -2,6 +2,11 @@
 
 Repository này là nguồn chuẩn để xây dựng, vận hành và khôi phục website bán thực phẩm trên WordPress/WooCommerce.
 
+## Vị trí làm việc
+
+- Repository chính sau khi chuyển máy/khởi động lại: `E:\Projects\thuc-pham-thuy-trang`.
+- Bản gốc tại `C:\Users\nvhoa2\Projects\thuc-pham-thuy-trang` chỉ giữ làm dự phòng; không chỉnh đồng thời hai bản.
+
 ## Nguyên tắc lưu trữ
 
 - Git lưu code tùy biến, script tự động hóa, dữ liệu mẫu không nhạy cảm và tài liệu.

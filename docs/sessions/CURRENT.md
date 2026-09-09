@@ -2,6 +2,14 @@
 
 Cập nhật: 2026-09-09, múi giờ Asia/Ho_Chi_Minh.
 
+## Sau khi khởi động lại máy
+
+- Mở Codex với workspace tuyệt đối: `E:\Projects\thuc-pham-thuy-trang`.
+- Gửi yêu cầu: `Đọc AGENTS.md và docs/sessions/CURRENT.md, kiểm tra Git rồi tiếp tục đúng bước tiếp theo.`
+- Repository ở ổ E là bản làm việc chính. Bản cũ ở ổ C chỉ là dự phòng và không được chỉnh song song.
+- File `config/local.ps1` ở bản ổ E chứa metadata kết nối riêng của máy và bị Git ignore.
+- Private key vẫn nằm ngoài repository tại đường dẫn được tham chiếu trong `config/local.ps1`.
+
 ## Mục tiêu đang thực hiện
 
 Thiết lập nguồn sự thật local/Git và tài liệu chuyển giao trước khi thay đổi WordPress trên VPS.
@@ -20,6 +28,7 @@ Thiết lập nguồn sự thật local/Git và tài liệu chuyển giao trư�
 - Ghim host fingerprint và SSH thành công ở chế độ chỉ đọc.
 - Khảo sát filesystem, WordPress, theme/plugin, nội dung cơ bản và backup hiện có.
 - Tạo cấu trúc repository local và bộ tài liệu nền tảng.
+- Chuẩn bị sao chép nguyên repository và Git history sang `E:\Projects\thuc-pham-thuy-trang` để dùng sau khi restart.
 
 ## Hiện trạng quan trọng
 
