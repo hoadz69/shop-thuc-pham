@@ -23,7 +23,7 @@ Describe 'Import-ProjectConfig' {
                 ProjectSshPort = 2222
                 ProjectSshUser = 'root'
                 ProjectSshKeyPath = $KeyPath
-                ProjectHostKey = 'SHA256:test-fingerprint'
+                ProjectHostKey = 'SHA256:AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA'
                 ProjectWebRoot = '/www/wwwroot/test-site'
             }
 
@@ -123,6 +123,26 @@ Describe 'Import-ProjectConfig' {
         Get-ImportErrorMessage -Path $script:configPath | Should -Match 'ProjectWebRoot'
     }
 
+    It 'rejects unsafe web-root segments' {
+        $unsafeRoots = @(
+            '/www/wwwroot/.'
+            '/www/wwwroot/..'
+            '/www/wwwroot/site name'
+            "/www/wwwroot/site`nname"
+            '/www/wwwroot/site;id'
+            '/www/wwwroot/site$(id)'
+            '/www/wwwroot/site`id`'
+        )
+
+        foreach ($unsafeRoot in $unsafeRoots) {
+            New-TestProjectConfig -Path $script:configPath -KeyPath $script:keyPath -Overrides @{
+                ProjectWebRoot = $unsafeRoot
+            }
+
+            Get-ImportErrorMessage -Path $script:configPath | Should -Match 'ProjectWebRoot'
+        }
+    }
+
     It 'rejects an SSH port other than 2222' {
         New-TestProjectConfig -Path $script:configPath -KeyPath $script:keyPath -Overrides @{
             ProjectSshPort = 22
@@ -141,6 +161,14 @@ Describe 'Import-ProjectConfig' {
     It 'rejects a host fingerprint without the SHA256 prefix' {
         New-TestProjectConfig -Path $script:configPath -KeyPath $script:keyPath -Overrides @{
             ProjectHostKey = 'legacy-fingerprint'
+        }
+
+        Get-ImportErrorMessage -Path $script:configPath | Should -Match 'ProjectHostKey.*SHA256:'
+    }
+
+    It 'rejects a malformed SHA256 host fingerprint' {
+        New-TestProjectConfig -Path $script:configPath -KeyPath $script:keyPath -Overrides @{
+            ProjectHostKey = 'SHA256:too-short'
         }
 
         Get-ImportErrorMessage -Path $script:configPath | Should -Match 'ProjectHostKey.*SHA256:'
@@ -179,7 +207,7 @@ Describe 'PuTTY connection helpers' {
             ProjectSshPort = 2222
             ProjectSshUser = 'deploy-user'
             ProjectSshKeyPath = 'C:\keys\project key.ppk'
-            ProjectHostKey = 'SHA256:pinned-fingerprint'
+            ProjectHostKey = 'SHA256:AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA'
             ProjectWebRoot = '/www/wwwroot/site'
         }
         $script:plinkArguments = @()
@@ -187,10 +215,12 @@ Describe 'PuTTY connection helpers' {
 
         Mock plink {
             $script:plinkArguments = @($args)
+            $global:LASTEXITCODE = 0
             'remote-output'
         }
         Mock pscp {
             $script:pscpArguments = @($args)
+            $global:LASTEXITCODE = 0
             'copy-output'
         }
     }
@@ -198,20 +228,60 @@ Describe 'PuTTY connection helpers' {
     It 'passes SSH options as discrete arguments and pins the host fingerprint' {
         $output = Invoke-ProjectSsh -Config $script:connectionConfig -Command 'printf safe'
 
-        ($script:plinkArguments -join '|') | Should -Be '-batch|-P|2222|-i|C:\keys\project key.ppk|-hostkey|SHA256:pinned-fingerprint|deploy-user@server.example.test|printf safe'
+        ($script:plinkArguments -join '|') | Should -Be '-batch|-P|2222|-i|C:\keys\project key.ppk|-hostkey|SHA256:AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA|deploy-user@server.example.test|printf safe'
         ($output -join '|') | Should -Be 'remote-output'
     }
 
     It 'builds an upload target without flattening the argument array' {
         $output = Copy-ProjectScp -Config $script:connectionConfig -SourcePath 'C:\build\site archive.zip' -DestinationPath '/tmp/site archive.zip'
 
-        ($script:pscpArguments -join '|') | Should -Be '-batch|-P|2222|-i|C:\keys\project key.ppk|-hostkey|SHA256:pinned-fingerprint|C:\build\site archive.zip|deploy-user@server.example.test:/tmp/site archive.zip'
+        ($script:pscpArguments -join '|') | Should -Be '-batch|-P|2222|-i|C:\keys\project key.ppk|-hostkey|SHA256:AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA|C:\build\site archive.zip|deploy-user@server.example.test:/tmp/site archive.zip'
         ($output -join '|') | Should -Be 'copy-output'
     }
 
     It 'builds a recursive download source with the pinned fingerprint' {
         Copy-ProjectScp -Config $script:connectionConfig -SourcePath '/www/backup/site/snapshot' -DestinationPath 'C:\backups\snapshot' -FromRemote -Recurse | Out-Null
 
-        ($script:pscpArguments -join '|') | Should -Be '-batch|-P|2222|-i|C:\keys\project key.ppk|-hostkey|SHA256:pinned-fingerprint|-r|deploy-user@server.example.test:/www/backup/site/snapshot|C:\backups\snapshot'
+        ($script:pscpArguments -join '|') | Should -Be '-batch|-P|2222|-i|C:\keys\project key.ppk|-hostkey|SHA256:AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA|-r|deploy-user@server.example.test:/www/backup/site/snapshot|C:\backups\snapshot'
+    }
+
+    It 'throws a secret-safe error when plink exits nonzero' {
+        $secretCommand = 'printf command-sensitive-value'
+        Mock plink {
+            $global:LASTEXITCODE = 17
+        }
+
+        $message = try {
+            Invoke-ProjectSsh -Config $script:connectionConfig -Command $secretCommand | Out-Null
+            $null
+        }
+        catch {
+            $_.Exception.Message
+        }
+
+        $message | Should -Be 'plink exited with code 17.'
+        $message | Should -Not -Match ([regex]::Escape($secretCommand))
+        $message | Should -Not -Match ([regex]::Escape($script:connectionConfig.ProjectSshKeyPath))
+        $message | Should -Not -Match ([regex]::Escape($script:connectionConfig.ProjectHostKey))
+    }
+
+    It 'throws a secret-safe error when pscp exits nonzero' {
+        $sensitiveSource = 'C:\private\sensitive archive.zip'
+        Mock pscp {
+            $global:LASTEXITCODE = 23
+        }
+
+        $message = try {
+            Copy-ProjectScp -Config $script:connectionConfig -SourcePath $sensitiveSource -DestinationPath '/tmp/upload.zip' | Out-Null
+            $null
+        }
+        catch {
+            $_.Exception.Message
+        }
+
+        $message | Should -Be 'pscp exited with code 23.'
+        $message | Should -Not -Match ([regex]::Escape($sensitiveSource))
+        $message | Should -Not -Match ([regex]::Escape($script:connectionConfig.ProjectSshKeyPath))
+        $message | Should -Not -Match ([regex]::Escape($script:connectionConfig.ProjectHostKey))
     }
 }

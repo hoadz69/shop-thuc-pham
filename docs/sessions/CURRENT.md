@@ -42,6 +42,8 @@ Cập nhật: 2026-09-09, múi giờ Asia/Ho_Chi_Minh.
 - Hoàn thành Task 1 với `scripts/lib/Project.Common.ps1`, cấu hình mẫu PPK và 16 test Pester cho validation/scope/SSH/SCP. Chu kỳ TDD: RED 0 pass/16 fail do helper chưa tồn tại; GREEN 16 pass/0 fail bằng Pester 6.1.0.
 - Xác minh `config/local.ps1` thật nạp thành công mà không in giá trị: đúng sáu field, key có đuôi PPK, `plink` và `pscp` đều khả dụng. Không cần backup vì Task 1 chỉ thay đổi code/tài liệu local và test mock toàn bộ network.
 - Commit Task 1: `build: add safe server connection helpers` (chính commit chứa handoff này; xem `git log -1`). Commit hoàn tất gần nhất trước Task 1: `b68fe14`.
+- Sau quality review, harden Task 1 để `plink`/`pscp` dừng bằng lỗi chỉ chứa tên tool và exit code khi native process trả nonzero; web root chỉ nhận một segment an toàn `[A-Za-z0-9][A-Za-z0-9._-]*`; fingerprint phải có digest Base64 43 ký tự. Test bổ sung bao phủ `.`, `..`, khoảng trắng, newline, `;`, `$()`, backtick và lỗi native không rò command/key/fingerprint.
+- Chu kỳ TDD cho fix review: RED 16 pass/4 fail đúng bốn hành vi thiếu; GREEN 20 pass/0 fail bằng Pester 6.1.0. Fingerprint trong `config/local.ps1` thật khớp grammar mới khi kiểm tra boolean, không in giá trị. Commit fix: `fix: harden server connection helpers` (chính commit chứa handoff này; xem `git log -1`).
 
 ## Hiện trạng quan trọng
 

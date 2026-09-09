@@ -50,11 +50,15 @@ function Import-ProjectConfig {
         throw 'ProjectSshKeyPath must point to an existing key file.'
     }
 
-    if ([string] $rawConfig.ProjectHostKey -notlike 'SHA256:*') {
-        throw 'ProjectHostKey must start with SHA256:.'
+    if ([string] $rawConfig.ProjectHostKey -notmatch '^SHA256:[A-Za-z0-9+/]{43}$') {
+        throw 'ProjectHostKey must be a SHA256: fingerprint with a 43-character Base64 digest.'
     }
 
-    if ([string] $rawConfig.ProjectWebRoot -notmatch '^/www/wwwroot/[^/]+$') {
+    $webRoot = [string] $rawConfig.ProjectWebRoot
+    if (
+        $webRoot -in @('/www/wwwroot/.', '/www/wwwroot/..') -or
+        $webRoot -notmatch '^/www/wwwroot/[A-Za-z0-9][A-Za-z0-9._-]*$'
+    ) {
         throw 'ProjectWebRoot must identify one site directly below /www/wwwroot.'
     }
 
@@ -92,6 +96,10 @@ function Invoke-ProjectSsh {
     )
 
     & plink @arguments
+    $exitCode = $LASTEXITCODE
+    if ($exitCode -ne 0) {
+        throw "plink exited with code ${exitCode}."
+    }
 }
 
 function Copy-ProjectScp {
@@ -136,4 +144,8 @@ function Copy-ProjectScp {
     }
 
     & pscp @arguments
+    $exitCode = $LASTEXITCODE
+    if ($exitCode -ne 0) {
+        throw "pscp exited with code ${exitCode}."
+    }
 }
