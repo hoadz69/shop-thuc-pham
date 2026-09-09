@@ -511,21 +511,21 @@ git commit -m "feat: add product QR and label printing"
 - Modify: `scripts/Configure-WordPress.ps1`
 - Modify: `scripts/Smoke-Test.ps1`
 
-- [ ] **Step 1: Đánh giá plugin PWA miễn phí từ nguồn chính thức**
+- [x] **Step 1: Đánh giá plugin PWA miễn phí từ nguồn chính thức**
 
 Ghi license, tested-up-to, PHP requirement, update date, service-worker scope, offline behavior và uninstall cleanup. Chỉ cài từ WordPress.org; nếu site vẫn HTTP/IP, cấu hình manifest/icon nhưng ghi trạng thái “chờ HTTPS”, không tuyên bố installable.
 
-- [ ] **Step 2: Viết test thất bại**
+- [x] **Step 2: Viết test thất bại**
 
 Test xác nhận manifest trả JSON hợp lệ, `name`, `short_name`, `start_url`, `display`, theme/background colors và icon 192/512 cùng origin; service worker không cache admin, cart, checkout, account hoặc request có nonce.
 
-- [ ] **Step 3: Cài/cấu hình plugin đã ghi trong decision và chạy test**
+- [x] **Step 3: Cài/cấu hình plugin đã ghi trong decision và chạy test**
 
 Run: `Invoke-Pester tests/powershell/Pwa.Tests.ps1 -Output Detailed`
 
 Expected: manifest PASS; khi chưa HTTPS, installability test báo SKIP với lý do rõ ràng, không FAIL giả.
 
-- [ ] **Step 4: Commit**
+- [x] **Step 4: Commit**
 
 ```powershell
 git add docs/decisions/pwa-solution.md tests/powershell/Pwa.Tests.ps1 scripts/Configure-WordPress.ps1 scripts/Smoke-Test.ps1

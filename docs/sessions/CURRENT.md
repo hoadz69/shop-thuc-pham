@@ -65,6 +65,7 @@ Cập nhật: 2026-09-09, múi giờ Asia/Ho_Chi_Minh.
 - Giao diện public để người dùng kiểm tra bằng mắt: `http://103.77.240.28/`; shop: `http://103.77.240.28/products/`. Commit checkpoint source đầu tiên: `3a7b617`; commit chứa handoff hoàn tất Task 9 là commit mới nhất (xem `git log -1`).
 - Task 10 hoàn thành: nội dung version-control cho `/gioi-thieu/` và `/lien-he/` được upsert, không có contact giả/script/iframe; cả hai HTTP 200. Hướng dẫn quản trị sản phẩm và đơn COD nằm tại `docs/operations/product-and-order-management.md`; Pester cấu hình PASS 7/7. Đã xác nhận có đúng 1 administrator, tạo/sửa/xóa sạch đúng một draft product workflow test; kiểm tra lại không còn draft test.
 - Task 11 hoàn thành: đã đánh giá QRCraft/WPC Product QR từ nguồn chính thức và chọn plugin riêng `tt-product-qr` để QR luôn là canonical product URL, render hoàn toàn local bằng QRCode.js MIT đã ghim commit/checksum, không telemetry/shortlink. Plugin đã deploy đúng `wp-content/plugins/tt-product-qr`, remote PHP lint và deploy PASS, active; ba sản phẩm ID 31–33 trả HTTP 200 và payload khớp permalink. Runtime `TT_Product_QR::product_url(31)` khớp URL sản phẩm. Ảnh kiểm tra Playwright local ignored `backups/visual-check/product-qr-desktop.png` xác nhận QR render rõ. Endpoint in yêu cầu `edit_products` và nonce; do HTTP/IP, tem vẫn là bản thử và chưa được duyệt in hàng loạt.
+- Task 12 hoàn thành ở checkpoint HTTP: đã đánh giá SuperPWA 2.2.48 và PWA for WP 1.7.88 từ WordPress.org, rồi chọn plugin riêng `tt-pwa` không lưu database để kiểm soát cache WooCommerce. Plugin đã deploy/active và remote lint PASS. Manifest/worker/icon đều HTTP 200, manifest JSON có name/short name/start URL/display/màu/icon same-origin 192/512, worker scope `/`; chính sách bỏ qua admin/login/cart/checkout/account/non-GET/nonce/Woo AJAX/add-to-cart. Pester PASS 7/7 cùng smoke All PASS. Vì origin vẫn là HTTP/IP, đăng ký service worker chủ động SKIP với trạng thái `waiting-https`; chưa tuyên bố installable.
 
 ## Hiện trạng quan trọng
 
@@ -75,7 +76,7 @@ Cập nhật: 2026-09-09, múi giờ Asia/Ho_Chi_Minh.
 
 ## Bước tiếp theo
 
-1. Tiếp tục Task 12–13: PWA checkpoint HTTP và COD acceptance.
+1. Tiếp tục Task 13: COD acceptance và regression; sau đó chuẩn bị Task 14 tới đúng cổng domain/HTTPS.
 2. Hoàn tất push GitHub sau khi người dùng xác nhận cửa sổ đăng nhập tài khoản `hoadz69`; remote đã chọn là `https://github.com/hoadz69/shop-thuc-pham.git`.
 3. Task 14 vẫn chờ domain/quyền DNS/SSL; website IP tiếp tục vận hành và QR/PWA chưa được tuyên bố hoàn chỉnh.
 

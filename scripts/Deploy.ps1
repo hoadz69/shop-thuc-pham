@@ -1,6 +1,6 @@
 [CmdletBinding(SupportsShouldProcess = $true)]
 param(
-    [ValidateSet('Theme', 'ProductQr')]
+    [ValidateSet('Theme', 'ProductQr', 'Pwa')]
     [string] $Component = 'Theme',
     [string] $ConfigPath = (Join-Path $PSScriptRoot '..\config\local.ps1')
 )
@@ -10,8 +10,10 @@ $ErrorActionPreference = 'Stop'
 $config = Import-ProjectConfig -Path $ConfigPath
 $spec = if ($Component -eq 'Theme') {
     @{ Local = Join-Path $PSScriptRoot '..\theme\blocksy-child'; Slug = 'blocksy-child'; Relative = 'wp-content/themes'; Activate = 'theme' }
-} else {
+} elseif ($Component -eq 'ProductQr') {
     @{ Local = Join-Path $PSScriptRoot '..\plugin\tt-product-qr'; Slug = 'tt-product-qr'; Relative = 'wp-content/plugins'; Activate = 'plugin' }
+} else {
+    @{ Local = Join-Path $PSScriptRoot '..\plugin\tt-pwa'; Slug = 'tt-pwa'; Relative = 'wp-content/plugins'; Activate = 'plugin' }
 }
 $source = [IO.Path]::GetFullPath($spec.Local)
 if (-not (Test-Path -LiteralPath $source -PathType Container)) { throw "Component source is missing: $Component" }
@@ -37,7 +39,7 @@ trap 'rm -f -- "`$archive"; rm -rf -- "`$stage"' EXIT
 mkdir -p -- "`$stage" /www/backup/site/thuc-pham-thuy-trang/deploy
 chmod 700 /www/backup/site/thuc-pham-thuy-trang/deploy
 tar -xzf "`$archive" -C "`$stage"
-test -f "`$stage/$($spec.Slug)/$(if ($Component -eq 'Theme') { 'style.css' } else { 'tt-product-qr.php' })"
+test -f "`$stage/$($spec.Slug)/$(if ($Component -eq 'Theme') { 'style.css' } elseif ($Component -eq 'ProductQr') { 'tt-product-qr.php' } else { 'tt-pwa.php' })"
 if find "`$stage/$($spec.Slug)" -type l | grep -q .; then printf 'Symlink rejected.\n' >&2; exit 8; fi
 if [ -d "`$target" ]; then tar -czf "`$rollback" -C '$parent' '$($spec.Slug)'; chmod 600 "`$rollback"; fi
 install -d -m 775 -o www -g www "`$target"
