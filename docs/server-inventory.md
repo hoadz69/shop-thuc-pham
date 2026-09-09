@@ -27,7 +27,7 @@ Khảo sát chỉ đọc ngày 2026-09-09 qua SSH.
 - Theme có sẵn: Twenty Twenty-Two, Twenty Twenty-Three, Twenty Twenty-Four, Twenty Twenty-Five.
 - Plugin có trên đĩa: Akismet, WooCommerce.
 - Plugin đang bật: WooCommerce.
-- WP-CLI: chưa cài.
+- WP-CLI 2.12.0 đã được cài tại `/usr/local/bin/wp` từ Phar chính thức, xác minh chữ ký GPG của WP-CLI Releases trước khi cài.
 - Sản phẩm publish: 0.
 - Đơn hàng publish theo post type cũ: 0.
 - Trang publish: 5.
@@ -47,7 +47,7 @@ PHP CLI báo một số module đã được nạp lặp (`OPcache`, `zip`, `mbs
 
 ## Cần xác minh trước triển khai
 
-- WordPress `7.1` có phải bản stable/chính thức do aaPanel cài hay không; kiểm tra checksum sau khi có WP-CLI.
+- WordPress `7.1` đã được WP-CLI nhận diện và `wp core verify-checksums` PASS ngày 2026-09-09.
 - Database thực tế có đúng tên `wp_shop` và backup/restore được hay không, không ghi thông tin đăng nhập ra log.
 - Cấu hình backup scheduler của aaPanel.
 - Nginx vhost, cron, PHP-FPM và trạng thái HTTPS khi domain được cấp.

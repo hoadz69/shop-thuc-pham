@@ -230,17 +230,17 @@ git commit -m "ops: verify backup integrity and document restore drill"
 - Create: `tests/powershell/InstallWpCli.Tests.ps1`
 - Modify: `docs/server-inventory.md`
 
-- [ ] **Step 1: Viết test thất bại cho nguồn tải và checksum**
+- [x] **Step 1: Viết test thất bại cho nguồn tải và checksum**
 
 Mock SSH để xác nhận installer tải `wp-cli.phar` và checksum/signature từ nguồn chính thức, so khớp trước khi đặt executable, không ghi vào web root và dừng nếu xác minh lỗi.
 
-- [ ] **Step 2: Chạy test đỏ, cài tối thiểu, rồi chạy test xanh**
+- [x] **Step 2: Chạy test đỏ, cài tối thiểu, rồi chạy test xanh**
 
 Run: `Invoke-Pester tests/powershell/InstallWpCli.Tests.ps1 -Output Detailed`
 
 Expected trước cài đặt: FAIL; sau cài đặt: PASS.
 
-- [ ] **Step 3: Chạy installer sau khi xác nhận baseline còn hợp lệ**
+- [x] **Step 3: Chạy installer sau khi xác nhận baseline còn hợp lệ**
 
 Run: `$BaselineBackup = Get-ChildItem -LiteralPath backups -Directory | Sort-Object LastWriteTime -Descending | Select-Object -First 1; pwsh -File scripts/Verify-Backup.ps1 -BackupPath $BaselineBackup.FullName`
 
@@ -250,13 +250,13 @@ Run: `pwsh -File scripts/Install-WpCli.ps1`
 
 Expected: `wp --info` chạy được bằng PHP CLI; file cài ngoài WordPress core.
 
-- [ ] **Step 4: Kiểm tra WordPress và ghi drift**
+- [x] **Step 4: Kiểm tra WordPress và ghi drift**
 
 Run qua helper SSH: `wp core version --path=/www/wwwroot/103.77.240.28 --allow-root` và `wp core verify-checksums --path=/www/wwwroot/103.77.240.28 --allow-root`.
 
 Expected: phiên bản được WP-CLI nhận diện; checksum PASS. Nếu WordPress `7.1` không có checksum chính thức, dừng cấu hình và ghi blocker thay vì ép update/downgrade.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```powershell
 git add scripts/Install-WpCli.ps1 tests/powershell/InstallWpCli.Tests.ps1 docs/server-inventory.md

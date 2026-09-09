@@ -52,6 +52,8 @@ Cập nhật: 2026-09-09, múi giờ Asia/Ho_Chi_Minh.
 - Inventory tự động lúc `2026-09-09T04:13:06Z`: WordPress 7.1, theme `twentytwentyfive`, WooCommerce bật, Akismet/Hello tắt, 0 sản phẩm, 0 đơn kiểu post, 5 trang và 12 upload. PHP CLI vẫn báo OPcache/zip/mbstring nạp lặp; chưa thay đổi server.
 - Tasks 3–4 đã tạo baseline UTC `20260909T041847Z` tại server `/www/backup/site/thuc-pham-thuy-trang/20260909T041847Z` và local ignored `backups/20260909T041847Z-baseline`. Remote checksum 4/4 OK; local verifier PASS checksum, gzip/tar, path safety, uploads có file và các bảng hậu tố `_options`, `_posts`, `_postmeta` cùng marker dữ liệu.
 - Kích thước artifact: DB 304.976 byte, uploads 19.268 byte, source 58.853.291 byte, environment 245 byte; file/manifest quyền `600`, thư mục backup remote `700`. Pester backup/verifier PASS 9/9, gồm fixture checksum sai, SQL thiếu cấu trúc WordPress và uploads rỗng. Restore drill tạm đã được ghi vào runbook; production chưa bị trỏ vào database khác.
+- Task 5 đã xác minh lại baseline PASS, rồi cài WP-CLI 2.12.0 vào `/usr/local/bin/wp` từ Phar/ASC/key chính thức qua TLS; GPG báo chữ ký tốt với fingerprint `63AF 7AA1 5067 C056 16FD DD88 A3A2 E8F2 26F0 BC06`. Pester installer PASS 3/3.
+- `wp core version` nhận diện WordPress 7.1 và `wp core verify-checksums` PASS. Vì core chính thức/hợp lệ, cổng chuẩn hóa WordPress được phép tiếp tục.
 
 ## Hiện trạng quan trọng
 
@@ -62,8 +64,7 @@ Cập nhật: 2026-09-09, múi giờ Asia/Ho_Chi_Minh.
 
 ## Bước tiếp theo
 
-1. Thực hiện Task 5: cài WP-CLI có xác minh và audit checksum WordPress core.
-2. Nếu core hợp lệ, tiếp tục Task 6–9 để có giao diện storefront deploy cho người dùng kiểm tra bằng mắt.
+1. Thực hiện Task 6–9 để cài Blocksy/child theme, cấu hình WooCommerce, seed catalog và deploy giao diện storefront cho người dùng kiểm tra bằng mắt.
 
 ## Việc chưa chốt
 
