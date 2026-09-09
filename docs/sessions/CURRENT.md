@@ -12,7 +12,7 @@ Cập nhật: 2026-09-09, múi giờ Asia/Ho_Chi_Minh.
 
 ## Mục tiêu đang thực hiện
 
-Đang thực thi liên tục implementation plan 14 task để hoàn thiện và deploy bản website chạy qua IP hiện tại. Mọi thay đổi VPS vẫn bị chặn cho đến khi baseline backup ngoài VPS được tạo và xác minh.
+Đang thực thi liên tục implementation plan 14 task để hoàn thiện và deploy bản website chạy qua IP hiện tại. Task 1 đã hoàn thành; mọi thay đổi VPS vẫn bị chặn cho đến khi baseline backup ngoài VPS được tạo và xác minh.
 
 ## Phiên đang làm
 
@@ -21,6 +21,7 @@ Cập nhật: 2026-09-09, múi giờ Asia/Ho_Chi_Minh.
 - Đã nạp `config/local.ps1` mà không in secret; mọi khảo sát server tiếp theo vẫn phải chỉ đọc cho đến khi baseline backup được tạo và xác minh.
 - Đã hoàn thiện và tự rà soát `docs/superpowers/plans/2026-09-09-thuc-pham-woocommerce-implementation.md`; plan gồm 14 task, có cổng backup bắt buộc trước thay đổi WordPress.
 - Phiên hiện tại tiếp tục trực tiếp trên repository chính theo yêu cầu người dùng, dùng TDD và review theo từng task; không tạo/xóa worktree và không ghi đè thay đổi handoff sẵn có.
+- Task 1 đã thêm thư viện kết nối dùng PuTTY PPK, ghim host fingerprint và kiểm thử argument array hoàn toàn offline; không có kết nối hay thay đổi VPS trong task này.
 
 ## Quyết định đã được người dùng duyệt
 
@@ -38,6 +39,9 @@ Cập nhật: 2026-09-09, múi giờ Asia/Ho_Chi_Minh.
 - Tạo cấu trúc repository local và bộ tài liệu nền tảng.
 - Chuẩn bị sao chép nguyên repository và Git history sang `E:\Projects\thuc-pham-thuy-trang` để dùng sau khi restart.
 - Viết implementation plan chi tiết từ brief và kiến trúc đã duyệt; sửa dependency để verifier được tạo trước khi backup thật và deploy/smoke foundation được tạo trước lần sử dụng đầu tiên.
+- Hoàn thành Task 1 với `scripts/lib/Project.Common.ps1`, cấu hình mẫu PPK và 16 test Pester cho validation/scope/SSH/SCP. Chu kỳ TDD: RED 0 pass/16 fail do helper chưa tồn tại; GREEN 16 pass/0 fail bằng Pester 6.1.0.
+- Xác minh `config/local.ps1` thật nạp thành công mà không in giá trị: đúng sáu field, key có đuôi PPK, `plink` và `pscp` đều khả dụng. Không cần backup vì Task 1 chỉ thay đổi code/tài liệu local và test mock toàn bộ network.
+- Commit Task 1: `build: add safe server connection helpers` (chính commit chứa handoff này; xem `git log -1`). Commit hoàn tất gần nhất trước Task 1: `b68fe14`.
 
 ## Hiện trạng quan trọng
 
@@ -48,11 +52,9 @@ Cập nhật: 2026-09-09, múi giờ Asia/Ho_Chi_Minh.
 
 ## Bước tiếp theo
 
-1. Chọn cách thực thi plan: subagent-driven hoặc inline trong phiên hiện tại.
-2. Thực hiện Task 1: viết test Pester đỏ cho `Import-ProjectConfig`, sau đó tạo `scripts/lib/Project.Common.ps1` và chạy test xanh.
-3. Thực hiện Task 2: tự động hóa preflight/inventory chỉ đọc.
-4. Thực hiện Task 3–4: tạo baseline backup database + uploads/source, tải bản ngoài VPS và xác minh checksum/cấu trúc.
-5. Chỉ sau khi backup đạt mới cài WP-CLI và bắt đầu thay đổi WordPress theo Task 5 trở đi.
+1. Thực hiện Task 2: tự động hóa preflight/inventory chỉ đọc bằng các helper đã kiểm thử ở Task 1.
+2. Thực hiện Task 3–4: tạo baseline backup database + uploads/source, tải bản ngoài VPS và xác minh checksum/cấu trúc.
+3. Chỉ sau khi backup đạt mới cài WP-CLI và bắt đầu thay đổi WordPress theo Task 5 trở đi.
 
 ## Việc chưa chốt
 
