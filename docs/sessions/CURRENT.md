@@ -18,6 +18,7 @@ Cập nhật: 2026-09-09, múi giờ Asia/Ho_Chi_Minh.
 
 - Phiên 2026-09-09 hiện tại: tiếp tục từ Task 2 đến khi có giao diện deploy trên VPS để người dùng kiểm tra bằng mắt; giữ nguyên `.git`, `config/local.ps1` và không ghi đè thay đổi không rõ nguồn gốc.
 - Working tree được xác nhận sạch trên `main` trước khi bắt đầu. Mọi khảo sát VPS vẫn chỉ đọc cho đến khi baseline backup ngoài VPS vượt qua kiểm tra checksum/cấu trúc.
+- Người dùng yêu cầu khi hạn mức còn khoảng 2% thì dừng, lưu phiên và tiếp tục sau khi có hạn mức. Phiên này dừng ở checkpoint sau khi commit toàn bộ source/handoff; không bắt đầu Task 10–14.
 - Đã đọc lại `AGENTS.md`, handoff, server inventory, project brief, runbook và thiết kế đã duyệt.
 - Git ở nhánh `main`, commit gần nhất trước khi hoàn thiện plan là `d87401e`; các thay đổi tài liệu dang dở đã được rà soát và tiếp tục, không bị ghi đè.
 - Đã nạp `config/local.ps1` mà không in secret; mọi khảo sát server tiếp theo vẫn phải chỉ đọc cho đến khi baseline backup được tạo và xác minh.
@@ -54,6 +55,12 @@ Cập nhật: 2026-09-09, múi giờ Asia/Ho_Chi_Minh.
 - Kích thước artifact: DB 304.976 byte, uploads 19.268 byte, source 58.853.291 byte, environment 245 byte; file/manifest quyền `600`, thư mục backup remote `700`. Pester backup/verifier PASS 9/9, gồm fixture checksum sai, SQL thiếu cấu trúc WordPress và uploads rỗng. Restore drill tạm đã được ghi vào runbook; production chưa bị trỏ vào database khác.
 - Task 5 đã xác minh lại baseline PASS, rồi cài WP-CLI 2.12.0 vào `/usr/local/bin/wp` từ Phar/ASC/key chính thức qua TLS; GPG báo chữ ký tốt với fingerprint `63AF 7AA1 5067 C056 16FD DD88 A3A2 E8F2 26F0 BC06`. Pester installer PASS 3/3.
 - `wp core version` nhận diện WordPress 7.1 và `wp core verify-checksums` PASS. Vì core chính thức/hợp lệ, cổng chuẩn hóa WordPress được phép tiếp tục.
+- Task 6: cài Blocksy 2.1.56 chính thức, deploy/kích hoạt `blocksy-child` lần đầu và smoke Theme PASS. Child theme chứa homepage, Woo hooks, CSS responsive, JS progressive enhancement và hai ảnh tự tạo bằng built-in image generation: `hero-fresh-market.png`, `product-placeholder.png` (không sao chép site mẫu).
+- Task 7: trước xóa đã liệt kê rõ post/page/plugin. Đã xóa đúng post mặc định ID 1, page mẫu ID 2 và plugin `hello` 1.7.2; giữ nguyên các page WooCommerce và Akismet. Desired state chạy hai lần vẫn dùng home ID 13/shop ID 7; timezone, permalink, VND 0 decimals, COD và slug `/products`, `/cart`, `/checkout` đã cấu hình. WooCommerce coming-soon đã tắt bằng hai option chính thức để public có thể xem site.
+- Task 8: seed 7 danh mục/12 sản phẩm chạy hai lần, cả hai lần trả đúng 7/12; SKU là khóa upsert, ảnh placeholder được import một lần. Pester seed PASS 4/4.
+- Nginx pretty permalink ban đầu 404 vì file `/www/server/panel/vhost/rewrite/103.77.240.28.conf` rỗng. Đã tải bản gốc ra local ignored `backups/20260909T044157Z-nginx-rewrite`, lưu remote dưới `/www/backup/site/thuc-pham-thuy-trang/nginx/20260909T044157Z-103.77.240.28.conf`, áp `config/nginx-wordpress-rewrite.conf`, `nginx -t` PASS và reload thành công. Sau đó smoke Catalog PASS cho `/`, `/products/`, `/cart/`, `/checkout/`, theme state và 12 products.
+- Task 9 đang dở ở visual review. Desktop đã hiện đúng hero xanh, bốn cam kết và shop/catalog. Ảnh chụp local ignored nằm trong `backups/visual-check`. Lần chụp mobile cho thấy overflow và tiêu đề trang trùng; source đã sửa breakpoint, ẩn title trùng và thêm bottom mobile nav nhưng **bản sửa cuối chưa deploy**.
+- Lần deploy bản sửa mobile thất bại trước khi copy vì PowerShell `Split-Path` biến remote parent thành backslash trong lệnh tar rollback. Production không bị thay đổi bởi lần thất bại; smoke Catalog ngay sau đó vẫn PASS. Source `scripts/Deploy.ps1` đã sửa dùng `Substring/LastIndexOf('/')`, nhưng fix này chưa được chạy lại/xác minh trên VPS.
 
 ## Hiện trạng quan trọng
 
@@ -64,7 +71,9 @@ Cập nhật: 2026-09-09, múi giờ Asia/Ho_Chi_Minh.
 
 ## Bước tiếp theo
 
-1. Thực hiện Task 6–9 để cài Blocksy/child theme, cấu hình WooCommerce, seed catalog và deploy giao diện storefront cho người dùng kiểm tra bằng mắt.
+1. Chạy lại test deploy/smoke, rồi `pwsh -File scripts/Deploy.ps1 -Component Theme` để xác minh fix remote parent và deploy CSS/mobile nav đang chờ.
+2. Chạy `pwsh -File scripts/Smoke-Test.ps1 -Scope Catalog`, chụp lại homepage desktop 1440 và mobile 390 cùng `/products`; xác nhận không overflow, không title trùng và bottom nav hiển thị. Nếu đạt, đánh dấu hoàn tất Task 9.
+3. Rà secret, `git status`, cập nhật commit mới nhất trong handoff rồi tiếp tục Task 10–13. Task 14 vẫn chờ domain/quyền DNS/SSL.
 
 ## Việc chưa chốt
 

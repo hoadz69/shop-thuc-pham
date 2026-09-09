@@ -1,0 +1,13 @@
+sku,name,slug,regular_price,unit,category_slug,short_description,description,image_filename,featured
+TT-RAU-001,Cải xanh tươi,cai-xanh-tuoi,25000,kg,rau-cu-qua-tuoi,Dữ liệu mẫu: cải xanh chọn lọc mỗi ngày.,Dữ liệu mẫu phục vụ chạy thử website; thông tin nguồn gốc sẽ được cập nhật.,product-placeholder.png,yes
+TT-RAU-002,Cà chua đỏ,ca-chua-do,32000,kg,rau-cu-qua-tuoi,Dữ liệu mẫu: cà chua chín tự nhiên.,Dữ liệu mẫu phục vụ chạy thử website; hình ảnh mang tính minh họa.,product-placeholder.png,yes
+TT-HEO-001,Thịt ba chỉ heo,thit-ba-chi-heo,145000,kg,thit-heo,Dữ liệu mẫu: ba chỉ heo cắt theo yêu cầu.,Dữ liệu mẫu phục vụ chạy thử website; giá và quy cách sẽ được xác nhận.,product-placeholder.png,yes
+TT-HEO-002,Sườn non heo,suon-non-heo,175000,kg,thit-heo,Dữ liệu mẫu: sườn non phù hợp món kho và canh.,Dữ liệu mẫu phục vụ chạy thử website; hình ảnh mang tính minh họa.,product-placeholder.png,no
+TT-BO-001,Thịt bò mềm,thit-bo-mem,245000,kg,thit-bo,Dữ liệu mẫu: thịt bò cắt lát tiện chế biến.,Dữ liệu mẫu phục vụ chạy thử website; giá và quy cách sẽ được xác nhận.,product-placeholder.png,yes
+TT-GACAM-001,Gà ta làm sạch,ga-ta-lam-sach,165000,con,gia-cam,Dữ liệu mẫu: gà ta sơ chế sạch.,Dữ liệu mẫu phục vụ chạy thử website; khối lượng thực tế có thể thay đổi.,product-placeholder.png,yes
+TT-GACAM-002,Trứng gà,trung-ga,42000,hộp,gia-cam,Dữ liệu mẫu: hộp trứng gà 10 quả.,Dữ liệu mẫu phục vụ chạy thử website; quy cách sẽ được cập nhật.,product-placeholder.png,no
+TT-HAISAN-001,Cá thu cắt khúc,ca-thu-cat-khuc,185000,kg,hai-san,Dữ liệu mẫu: cá thu sơ chế tiện lợi.,Dữ liệu mẫu phục vụ chạy thử website; sản phẩm thực tế tùy ngày.,product-placeholder.png,yes
+TT-HAISAN-002,Tôm tươi,tom-tuoi,220000,kg,hai-san,Dữ liệu mẫu: tôm tươi dùng cho bữa cơm gia đình.,Dữ liệu mẫu phục vụ chạy thử website; cỡ tôm sẽ được cập nhật.,product-placeholder.png,yes
+TT-KHO-001,Gạo thơm,gao-thom,98000,gói,do-kho,Dữ liệu mẫu: gói gạo thơm 5 kg.,Dữ liệu mẫu phục vụ chạy thử website; nhãn hàng chính thức sẽ được cập nhật.,product-placeholder.png,yes
+TT-KHO-002,Nấm hương khô,nam-huong-kho,65000,gói,do-kho,Dữ liệu mẫu: nấm hương khô đóng gói.,Dữ liệu mẫu phục vụ chạy thử website; khối lượng sẽ được cập nhật.,product-placeholder.png,no
+TT-CB-001,Chả giò rau củ,cha-gio-rau-cu,75000,khay,thuc-pham-che-bien,Dữ liệu mẫu: chả giò rau củ tiện chế biến.,Dữ liệu mẫu phục vụ chạy thử website; bảo quản theo hướng dẫn chính thức.,product-placeholder.png,yes

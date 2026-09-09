@@ -275,21 +275,21 @@ git commit -m "ops: install verified wp-cli and audit core"
 - Create: `tests/powershell/Deploy.Tests.ps1`
 - Create: `tests/powershell/SmokeTest.Tests.ps1`
 
-- [ ] **Step 1: Viết smoke test PHP thất bại**
+- [x] **Step 1: Viết smoke test PHP thất bại**
 
 Test bootstrap WordPress, xác nhận stylesheet là `blocksy-child`, template là `blocksy`, text domain `thuc-pham-thuy-trang` được khai báo và child stylesheet được enqueue với version lấy từ file.
 
-- [ ] **Step 2: Chạy test và xác nhận đỏ**
+- [x] **Step 2: Chạy test và xác nhận đỏ**
 
 Run trên bản staging/tạm hoặc qua deploy dry-run: `php tests/php/child-theme-smoke.php`
 
 Expected: FAIL vì child theme chưa tồn tại.
 
-- [ ] **Step 3: Tạo child theme tối thiểu**
+- [x] **Step 3: Tạo child theme tối thiểu**
 
 `style.css` phải có WordPress theme header với `Template: blocksy`. `functions.php` chỉ require `inc/setup.php`. `setup.php` phải enqueue parent/child CSS, dùng prefix `tt_`, escape output và không chứa business data.
 
-- [ ] **Step 4: Viết và kiểm thử deploy/smoke foundation**
+- [x] **Step 4: Viết và kiểm thử deploy/smoke foundation**
 
 Mock SSH/SCP và xác nhận `Deploy.ps1 -Component Theme -WhatIf` chỉ nhắm `wp-content/themes/blocksy-child`, luôn tạo archive rollback của child theme hiện tại nếu thư mục tồn tại, không theo symlink, và không kích hoạt theme khi copy/chown thất bại. `Smoke-Test.ps1 -Scope Theme` phải kiểm tra HTTP status, `template=blocksy`, `stylesheet=blocksy-child` và log PHP fatal mới kể từ timestamp bắt đầu test.
 
@@ -297,11 +297,11 @@ Run: `Invoke-Pester tests/powershell/Deploy.Tests.ps1,tests/powershell/SmokeTest
 
 Expected trước cài đặt: FAIL; sau khi tạo hai script: PASS và không có kết nối thật vì SSH/SCP đã được mock.
 
-- [ ] **Step 5: Cài parent theme và deploy child theme**
+- [x] **Step 5: Cài parent theme và deploy child theme**
 
 Run WP-CLI: `wp theme install blocksy --path=/www/wwwroot/103.77.240.28 --allow-root` từ repository WordPress chính thức. Deploy child theme vào `wp-content/themes/blocksy-child`, đặt owner `www:www`, directory `775`, file `664`, rồi activate child theme.
 
-- [ ] **Step 6: Chạy PHP lint, smoke test và HTTP check**
+- [x] **Step 6: Chạy PHP lint, smoke test và HTTP check**
 
 Run: `php -l theme/blocksy-child/functions.php` và `php -l theme/blocksy-child/inc/setup.php`.
 
@@ -311,7 +311,7 @@ Run: `pwsh -File scripts/Smoke-Test.ps1 -Scope Theme`
 
 Expected: homepage HTTP 200, parent/child active, không có PHP fatal trong error log mới.
 
-- [ ] **Step 7: Commit**
+- [x] **Step 7: Commit**
 
 ```powershell
 git add theme/blocksy-child tests/php/child-theme-smoke.php scripts/Deploy.ps1 scripts/Smoke-Test.ps1 tests/powershell/Deploy.Tests.ps1 tests/powershell/SmokeTest.Tests.ps1
@@ -325,29 +325,29 @@ git commit -m "feat: add Blocksy child theme foundation"
 - Create: `tests/powershell/ConfigureWordPress.Tests.ps1`
 - Modify: `docs/server-inventory.md`
 
-- [ ] **Step 1: Viết test thất bại cho desired state**
+- [x] **Step 1: Viết test thất bại cho desired state**
 
 Mock WP-CLI; xác nhận timezone `Asia/Ho_Chi_Minh`, permalink `/%postname%/`, currency `VND`, decimals `0`, country `VN`, COD enabled, các gateway khác disabled, shop slug `products`, và trang `gioi-thieu`/`lien-he` được upsert theo slug thay vì tạo trùng.
 
-- [ ] **Step 2: Chạy test đỏ, cài script, chạy test xanh**
+- [x] **Step 2: Chạy test đỏ, cài script, chạy test xanh**
 
 Run: `Invoke-Pester tests/powershell/ConfigureWordPress.Tests.ps1 -Output Detailed`
 
 Expected trước cài đặt: FAIL; sau cài đặt: PASS.
 
-- [ ] **Step 3: Liệt kê nội dung mặc định trước khi xóa**
+- [x] **Step 3: Liệt kê nội dung mặc định trước khi xóa**
 
 Run read-only: `wp post list --post_type=page,post --fields=ID,post_type,post_status,post_title,post_name --format=table` và `wp plugin list --format=table`.
 
 Expected: danh sách ID cụ thể được chép vào handoff. Chỉ `Hello world`, `Sample Page` và plugin mặc định đã xác nhận mới được đưa vào lệnh xóa theo từng ID; không dùng vòng lặp xóa hàng loạt.
 
-- [ ] **Step 4: Áp desired state và smoke test**
+- [x] **Step 4: Áp desired state và smoke test**
 
 Run: `pwsh -File scripts/Configure-WordPress.ps1 -Apply`
 
 Expected: chạy lần một thay đổi đúng phạm vi; chạy lần hai báo no-op; `/products`, `/gioi-thieu`, `/lien-he`, cart và checkout trả HTTP 200.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```powershell
 git add scripts/Configure-WordPress.ps1 tests/powershell/ConfigureWordPress.Tests.ps1 docs/server-inventory.md docs/sessions/CURRENT.md
@@ -364,27 +364,27 @@ git commit -m "feat: configure WordPress and WooCommerce defaults"
 - Create: `scripts/Seed-Catalog.ps1`
 - Create: `tests/powershell/SeedCatalog.Tests.ps1`
 
-- [ ] **Step 1: Viết fixtures đầy đủ**
+- [x] **Step 1: Viết fixtures đầy đủ**
 
 `categories.csv` chứa đúng bảy cặp tên/slug ổn định sau: `Rau củ quả tươi,rau-cu-qua-tuoi`; `Thịt heo,thit-heo`; `Thịt bò,thit-bo`; `Gia cầm,gia-cam`; `Hải sản,hai-san`; `Đồ khô,do-kho`; `Thực phẩm chế biến,thuc-pham-che-bien`. `products.csv` chứa 12 sản phẩm mẫu, mỗi dòng có `sku,name,slug,regular_price,unit,category_slug,short_description,description,image_filename,featured`; tên/giá/đơn vị phải có giá trị và nội dung phải ghi rõ là dữ liệu mẫu.
 
-- [ ] **Step 2: Viết test thất bại cho schema và idempotency**
+- [x] **Step 2: Viết test thất bại cho schema và idempotency**
 
 Test xác nhận bảy category slug duy nhất, 12 SKU/slug duy nhất, giá là số nguyên dương, unit thuộc tập `kg,gói,hộp,con,khay`, category tồn tại, image filename không thoát khỏi `data/images`. Mock WP-CLI để lần chạy thứ hai update theo SKU và không tạo product/category mới.
 
-- [ ] **Step 3: Chạy test đỏ, cài importer, chạy test xanh**
+- [x] **Step 3: Chạy test đỏ, cài importer, chạy test xanh**
 
 Run: `Invoke-Pester tests/powershell/SeedCatalog.Tests.ps1 -Output Detailed`
 
 Expected trước importer: FAIL; sau importer: PASS.
 
-- [ ] **Step 4: Nhập catalog và xác minh**
+- [x] **Step 4: Nhập catalog và xác minh**
 
 Run: `pwsh -File scripts/Seed-Catalog.ps1 -Apply`
 
 Expected: 7 danh mục, 12 sản phẩm publish, SKU/giá/đơn vị/category đúng; chạy lần hai không tăng count. Ảnh phải là asset mẫu có quyền sử dụng hoặc placeholder tự tạo, không sao chép từ website tham khảo.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```powershell
 git add data scripts/Seed-Catalog.ps1 tests/powershell/SeedCatalog.Tests.ps1
@@ -402,17 +402,17 @@ git commit -m "feat: add reproducible sample catalog"
 - Modify: `theme/blocksy-child/inc/setup.php`
 - Create: `tests/php/theme-render-smoke.php`
 
-- [ ] **Step 1: Viết render tests thất bại**
+- [x] **Step 1: Viết render tests thất bại**
 
 Test xác nhận trang chủ render một H1, hero, bốn cam kết, section “Thực phẩm tươi sạch mỗi tuần”, lưới sản phẩm nổi bật; shop có category sidebar và price filter; mọi query sản phẩm có giới hạn và gọi `wp_reset_postdata()`.
 
-- [ ] **Step 2: Chạy test và xác nhận đỏ**
+- [x] **Step 2: Chạy test và xác nhận đỏ**
 
 Run: `php tests/php/theme-render-smoke.php`
 
 Expected: FAIL vì hooks/sections chưa tồn tại.
 
-- [ ] **Step 3: Cài giao diện theo component**
+- [x] **Step 3: Cài giao diện theo component**
 
 `home.php` cung cấp shortcode/block render có escaping; `woocommerce.php` đăng ký sidebar và hooks; CSS dùng custom properties màu xanh, grid responsive tại 1024/768/480px, focus visible, ảnh có aspect ratio; JS chỉ điều khiển menu/interaction có progressive enhancement.
 
