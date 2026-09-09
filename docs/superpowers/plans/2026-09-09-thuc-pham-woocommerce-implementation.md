@@ -476,27 +476,27 @@ git commit -m "docs: add editable pages and store operations guide"
 - Create: `tests/php/product-qr-smoke.php`
 - Modify: `scripts/Deploy.ps1`
 
-- [ ] **Step 1: Đánh giá giải pháp miễn phí trước khi cài**
+- [x] **Step 1: Đánh giá giải pháp miễn phí trước khi cài**
 
 Dùng WordPress.org API và trang tác giả chính thức để ghi license, ngày cập nhật, tested-up-to, PHP requirement, active installs, cách tạo QR, dữ liệu gửi ra ngoài và khả năng in. Quyết định mặc định là plugin riêng `tt-product-qr` nếu không có plugin miễn phí nào đạt đồng thời: GPL-compatible, tương thích WordPress/PHP hiện tại, tạo QR cục bộ, không telemetry bắt buộc, không khóa product URL/print sau paywall.
 
-- [ ] **Step 2: Viết test thất bại**
+- [x] **Step 2: Viết test thất bại**
 
 Test tạo product fixture, xác nhận payload bằng `get_permalink($product_id)`, chỉ chấp nhận scheme `http/https`, QR có accessible label, endpoint in yêu cầu capability `edit_products` và nonce hợp lệ, output không chứa secret/customer data.
 
-- [ ] **Step 3: Chạy test đỏ, cài plugin tối thiểu, chạy test xanh**
+- [x] **Step 3: Chạy test đỏ, cài plugin tối thiểu, chạy test xanh**
 
 Run: `php tests/php/product-qr-smoke.php`
 
 Expected trước plugin: FAIL; sau plugin: PASS.
 
-- [ ] **Step 4: Deploy và kiểm tra bằng điện thoại**
+- [x] **Step 4: Deploy và kiểm tra bằng điện thoại**
 
 Run: `pwsh -File scripts/Deploy.ps1 -Component ProductQr`
 
 Expected: QR hiện trên product detail và admin; quét ba sản phẩm mở đúng canonical URL; tem thử in rõ ở kích thước đã ghi trong decision. Trước khi có domain, đánh dấu tem là bản thử và không in hàng loạt.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```powershell
 git add docs/decisions/qr-solution.md plugin/tt-product-qr tests/php/product-qr-smoke.php scripts/Deploy.ps1

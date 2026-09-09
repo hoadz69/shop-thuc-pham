@@ -1,0 +1,25 @@
+.tt-product-qr-panel {
+	margin-block: 1.5rem;
+	padding: 1rem;
+	border: 1px solid #dce8df;
+	border-radius: 12px;
+	background: #f7fbf8;
+}
+
+.tt-product-qr-panel h2 {
+	margin: 0 0 .75rem;
+	font-size: 1rem;
+}
+
+.tt-product-qr-code {
+	display: inline-block;
+	padding: 8px;
+	background: #fff;
+}
+
+.tt-product-qr-code img,
+.tt-product-qr-code canvas {
+	display: block;
+	max-width: 100%;
+	height: auto;
+}
