@@ -1,0 +1,28 @@
+# Local secrets and machine-specific connection details
+.env
+.env.*
+!.env.example
+config/local.ps1
+*.pem
+*.ppk
+*.key
+
+# Backups are not source code and may contain personal or secret data
+backups/
+*.sql
+*.sql.gz
+*.tar
+*.tar.gz
+*.zip
+
+# WordPress runtime/generated content
+wordpress/
+wp-content/uploads/
+wp-content/cache/
+wp-content/upgrade/
+
+# Editor and OS files
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
