@@ -129,6 +129,7 @@ Describe 'Import-ProjectConfig' {
             '/www/wwwroot/..'
             '/www/wwwroot/site name'
             "/www/wwwroot/site`nname"
+            "/www/wwwroot/site`n"
             '/www/wwwroot/site;id'
             '/www/wwwroot/site$(id)'
             '/www/wwwroot/site`id`'
@@ -169,6 +170,22 @@ Describe 'Import-ProjectConfig' {
     It 'rejects a malformed SHA256 host fingerprint' {
         New-TestProjectConfig -Path $script:configPath -KeyPath $script:keyPath -Overrides @{
             ProjectHostKey = 'SHA256:too-short'
+        }
+
+        Get-ImportErrorMessage -Path $script:configPath | Should -Match 'ProjectHostKey.*SHA256:'
+    }
+
+    It 'rejects a SHA256 host fingerprint with a trailing line feed' {
+        New-TestProjectConfig -Path $script:configPath -KeyPath $script:keyPath -Overrides @{
+            ProjectHostKey = "SHA256:AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA`n"
+        }
+
+        Get-ImportErrorMessage -Path $script:configPath | Should -Match 'ProjectHostKey.*SHA256:'
+    }
+
+    It 'rejects a lowercase SHA256 host fingerprint prefix' {
+        New-TestProjectConfig -Path $script:configPath -KeyPath $script:keyPath -Overrides @{
+            ProjectHostKey = 'sha256:AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA'
         }
 
         Get-ImportErrorMessage -Path $script:configPath | Should -Match 'ProjectHostKey.*SHA256:'

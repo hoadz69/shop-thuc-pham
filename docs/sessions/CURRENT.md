@@ -44,6 +44,7 @@ Cập nhật: 2026-09-09, múi giờ Asia/Ho_Chi_Minh.
 - Commit Task 1: `build: add safe server connection helpers` (chính commit chứa handoff này; xem `git log -1`). Commit hoàn tất gần nhất trước Task 1: `b68fe14`.
 - Sau quality review, harden Task 1 để `plink`/`pscp` dừng bằng lỗi chỉ chứa tên tool và exit code khi native process trả nonzero; web root chỉ nhận một segment an toàn `[A-Za-z0-9][A-Za-z0-9._-]*`; fingerprint phải có digest Base64 43 ký tự. Test bổ sung bao phủ `.`, `..`, khoảng trắng, newline, `;`, `$()`, backtick và lỗi native không rò command/key/fingerprint.
 - Chu kỳ TDD cho fix review: RED 16 pass/4 fail đúng bốn hành vi thiếu; GREEN 20 pass/0 fail bằng Pester 6.1.0. Fingerprint trong `config/local.ps1` thật khớp grammar mới khi kiểm tra boolean, không in giá trị. Commit fix: `fix: harden server connection helpers` (chính commit chứa handoff này; xem `git log -1`).
+- Sau review vòng hai, regex web root và fingerprint dùng `\z` để cấm LF cuối; fingerprint dùng so khớp phân biệt hoa thường và chỉ chấp nhận prefix chính xác `SHA256:`. Chu kỳ TDD: RED 19 pass/3 fail đúng ba boundary case; GREEN 22 pass/0 fail bằng Pester 6.1.0. Commit fix: `fix: enforce strict config boundaries` (chính commit chứa handoff này; xem `git log -1`).
 
 ## Hiện trạng quan trọng
 
