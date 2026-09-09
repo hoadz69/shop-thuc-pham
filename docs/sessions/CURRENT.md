@@ -18,7 +18,7 @@ Cập nhật: 2026-09-09, múi giờ Asia/Ho_Chi_Minh.
 
 - Phiên 2026-09-09 hiện tại: tiếp tục từ Task 2 đến khi có giao diện deploy trên VPS để người dùng kiểm tra bằng mắt; giữ nguyên `.git`, `config/local.ps1` và không ghi đè thay đổi không rõ nguồn gốc.
 - Working tree được xác nhận sạch trên `main` trước khi bắt đầu. Mọi khảo sát VPS vẫn chỉ đọc cho đến khi baseline backup ngoài VPS vượt qua kiểm tra checksum/cấu trúc.
-- Người dùng yêu cầu khi hạn mức còn khoảng 2% thì dừng, lưu phiên và tiếp tục sau khi có hạn mức. Phiên này dừng ở checkpoint sau khi commit toàn bộ source/handoff; không bắt đầu Task 10–14.
+- Người dùng từng yêu cầu dừng khi hạn mức còn khoảng 2%, sau đó yêu cầu tiếp tục ngay trong cùng phiên. Một commit checkpoint đã được tạo trước khi tiếp tục; không bắt đầu Task 10–14 trong checkpoint giao diện này.
 - Đã đọc lại `AGENTS.md`, handoff, server inventory, project brief, runbook và thiết kế đã duyệt.
 - Git ở nhánh `main`, commit gần nhất trước khi hoàn thiện plan là `d87401e`; các thay đổi tài liệu dang dở đã được rà soát và tiếp tục, không bị ghi đè.
 - Đã nạp `config/local.ps1` mà không in secret; mọi khảo sát server tiếp theo vẫn phải chỉ đọc cho đến khi baseline backup được tạo và xác minh.
@@ -59,8 +59,10 @@ Cập nhật: 2026-09-09, múi giờ Asia/Ho_Chi_Minh.
 - Task 7: trước xóa đã liệt kê rõ post/page/plugin. Đã xóa đúng post mặc định ID 1, page mẫu ID 2 và plugin `hello` 1.7.2; giữ nguyên các page WooCommerce và Akismet. Desired state chạy hai lần vẫn dùng home ID 13/shop ID 7; timezone, permalink, VND 0 decimals, COD và slug `/products`, `/cart`, `/checkout` đã cấu hình. WooCommerce coming-soon đã tắt bằng hai option chính thức để public có thể xem site.
 - Task 8: seed 7 danh mục/12 sản phẩm chạy hai lần, cả hai lần trả đúng 7/12; SKU là khóa upsert, ảnh placeholder được import một lần. Pester seed PASS 4/4.
 - Nginx pretty permalink ban đầu 404 vì file `/www/server/panel/vhost/rewrite/103.77.240.28.conf` rỗng. Đã tải bản gốc ra local ignored `backups/20260909T044157Z-nginx-rewrite`, lưu remote dưới `/www/backup/site/thuc-pham-thuy-trang/nginx/20260909T044157Z-103.77.240.28.conf`, áp `config/nginx-wordpress-rewrite.conf`, `nginx -t` PASS và reload thành công. Sau đó smoke Catalog PASS cho `/`, `/products/`, `/cart/`, `/checkout/`, theme state và 12 products.
-- Task 9 đang dở ở visual review. Desktop đã hiện đúng hero xanh, bốn cam kết và shop/catalog. Ảnh chụp local ignored nằm trong `backups/visual-check`. Lần chụp mobile cho thấy overflow và tiêu đề trang trùng; source đã sửa breakpoint, ẩn title trùng và thêm bottom mobile nav nhưng **bản sửa cuối chưa deploy**.
-- Lần deploy bản sửa mobile thất bại trước khi copy vì PowerShell `Split-Path` biến remote parent thành backslash trong lệnh tar rollback. Production không bị thay đổi bởi lần thất bại; smoke Catalog ngay sau đó vẫn PASS. Source `scripts/Deploy.ps1` đã sửa dùng `Substring/LastIndexOf('/')`, nhưng fix này chưa được chạy lại/xác minh trên VPS.
+- Task 9 hoàn thành và đã deploy. Lần deploy bản sửa mobile đầu tiên thất bại an toàn trước copy vì PowerShell `Split-Path` biến remote parent thành backslash; source đã sửa dùng `Substring/LastIndexOf('/')`, sau đó deploy lại thành công và tạo rollback theme như thiết kế.
+- Visual review bằng Playwright/Edge đạt ở desktop 1440px và mobile thật 390px: không overflow ngang, không còn title shop trùng, hero/bốn cam kết/danh mục/product grid rõ, hamburger cùng bottom nav 4 mục truy cập được. Ảnh bằng chứng local ignored nằm trong `backups/visual-check` (`products-desktop-approved.png`, `home-mobile-approved.png`).
+- Đã liệt kê taxonomy trước thay đổi, rồi chuyển `default_product_cat` từ term ID 15 sang ID 16 và xóa đúng term rỗng ID 15 “Chưa phân loại”; hiện còn đúng 7 danh mục mong muốn. Smoke Catalog cuối PASS cho HTTP, Blocksy child và 12 sản phẩm. Toàn bộ Pester tại checkpoint PASS 51/51.
+- Giao diện public để người dùng kiểm tra bằng mắt: `http://103.77.240.28/`; shop: `http://103.77.240.28/products/`. Commit checkpoint source đầu tiên: `3a7b617`; commit chứa handoff hoàn tất Task 9 là commit mới nhất (xem `git log -1`).
 
 ## Hiện trạng quan trọng
 
@@ -71,9 +73,9 @@ Cập nhật: 2026-09-09, múi giờ Asia/Ho_Chi_Minh.
 
 ## Bước tiếp theo
 
-1. Chạy lại test deploy/smoke, rồi `pwsh -File scripts/Deploy.ps1 -Component Theme` để xác minh fix remote parent và deploy CSS/mobile nav đang chờ.
-2. Chạy `pwsh -File scripts/Smoke-Test.ps1 -Scope Catalog`, chụp lại homepage desktop 1440 và mobile 390 cùng `/products`; xác nhận không overflow, không title trùng và bottom nav hiển thị. Nếu đạt, đánh dấu hoàn tất Task 9.
-3. Rà secret, `git status`, cập nhật commit mới nhất trong handoff rồi tiếp tục Task 10–13. Task 14 vẫn chờ domain/quyền DNS/SSL.
+1. Chờ người dùng kiểm tra giao diện bằng mắt và ghi nhận phản hồi thiết kế.
+2. Sau phản hồi, tiếp tục Task 10: nội dung Giới thiệu/Liên hệ và tài liệu quản trị; rồi Task 11–13 (QR, PWA checkpoint HTTP, COD acceptance).
+3. Task 14 vẫn chờ domain/quyền DNS/SSL; website IP tiếp tục vận hành và QR/PWA chưa được tuyên bố hoàn chỉnh.
 
 ## Việc chưa chốt
 

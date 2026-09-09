@@ -23,17 +23,24 @@ Khảo sát chỉ đọc ngày 2026-09-09 qua SSH.
 - Quyền thư mục gốc: `755`; `wp-content`, themes, plugins, uploads: `775`.
 - WordPress core được báo cáo bởi file `wp-includes/version.php`: `7.1`.
 - URL site/home: `http://103.77.240.28`.
-- Theme đang chạy: `twentytwentyfive`.
+- Theme đang chạy: `blocksy-child` (parent Blocksy 2.1.56).
 - Theme có sẵn: Twenty Twenty-Two, Twenty Twenty-Three, Twenty Twenty-Four, Twenty Twenty-Five.
-- Plugin có trên đĩa: Akismet, WooCommerce.
+- Plugin có trên đĩa: Akismet, WooCommerce; plugin mặc định Hello Dolly đã được xóa sau khi xác nhận chính xác.
 - Plugin đang bật: WooCommerce.
 - WP-CLI 2.12.0 đã được cài tại `/usr/local/bin/wp` từ Phar chính thức, xác minh chữ ký GPG của WP-CLI Releases trước khi cài.
-- Sản phẩm publish: 0.
+- Sản phẩm publish: 12 sản phẩm mẫu.
 - Đơn hàng publish theo post type cũ: 0.
-- Trang publish: 5.
-- Upload files: 12.
+- Trang publish: 7.
+- Upload files: 22.
 - Tổng dung lượng web root quan sát được: khoảng 205 MB.
 - Không phát hiện `.git` trong website.
+
+## Trạng thái storefront sau triển khai 2026-09-09
+
+- Parent theme Blocksy 2.1.56 và child theme `blocksy-child` đang hoạt động; code tùy biến chỉ nằm dưới `wp-content/themes/blocksy-child`.
+- WooCommerce 11.1.0 public ở `/products/`, dùng VND 0 số lẻ và COD; coming-soon đã tắt để người dùng kiểm tra.
+- Catalog mẫu có 7 danh mục, 12 sản phẩm và một attachment placeholder tự tạo; trang chủ là page ID 13, shop là page ID 7.
+- Nginx rewrite WordPress đã được thêm qua file include riêng; backup file rewrite rỗng ban đầu có ở server/local như ghi trong handoff. `nginx -t` và smoke HTTP đều PASS.
 
 ## Backup
 
@@ -55,18 +62,20 @@ PHP CLI báo một số module đã được nạp lặp (`OPcache`, `zip`, `mbs
 <!-- AUTO-INVENTORY:START -->
 ## Khảo sát tự động gần nhất
 
-``json
+```json
 {
-  "collectedAtUtc": "2026-09-09T04:13:06Z",
+  "collectedAtUtc": "2026-09-09T07:47:07Z",
   "webRoot": "/www/wwwroot/103.77.240.28",
-  "disk": "7168368/51485444/41679504",
+  "disk": "7273276/51485444/41574596",
   "rootStat": "www:www:755",
-  "sourceBytes": 183128389,
+  "sourceBytes": 202931708,
   "wordpressVersion": "7.1",
   "siteUrl": "http://103.77.240.28",
   "homeUrl": "http://103.77.240.28",
-  "activeTheme": "twentytwentyfive",
+  "activeTheme": "blocksy-child",
   "themes": [
+    "blocksy-child",
+    "blocksy",
     "twentytwentyfive",
     "twentytwentyfour",
     "twentytwentythree",
@@ -78,20 +87,16 @@ PHP CLI báo một số module đã được nạp lặp (`OPcache`, `zip`, `mbs
       "active": false
     },
     {
-      "name": "hello",
-      "active": false
-    },
-    {
       "name": "woocommerce",
       "active": true
     }
   ],
   "counts": {
-    "products": 0,
+    "products": 12,
     "orders": 0,
-    "pages": 5
+    "pages": 7
   },
-  "uploadFiles": 12
+  "uploadFiles": 22
 }
 ```
 <!-- AUTO-INVENTORY:END -->

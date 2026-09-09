@@ -416,7 +416,7 @@ Expected: FAIL vì hooks/sections chưa tồn tại.
 
 `home.php` cung cấp shortcode/block render có escaping; `woocommerce.php` đăng ký sidebar và hooks; CSS dùng custom properties màu xanh, grid responsive tại 1024/768/480px, focus visible, ảnh có aspect ratio; JS chỉ điều khiển menu/interaction có progressive enhancement.
 
-- [ ] **Step 4: Deploy và kiểm tra hình ảnh**
+- [x] **Step 4: Deploy và kiểm tra hình ảnh**
 
 Run: `pwsh -File scripts/Deploy.ps1 -Component Theme`
 
@@ -424,7 +424,7 @@ Expected: chỉ child theme thay đổi, backup phần theme trước deploy, ow
 
 Chụp và rà soát desktop 1440px cùng mobile 390px cho homepage, `/products`, category và product detail; xác nhận không overflow ngang, keyboard focus rõ, search/cart truy cập được.
 
-- [ ] **Step 5: Chạy lint/smoke và commit**
+- [x] **Step 5: Chạy lint/smoke và commit**
 
 Run: `Get-ChildItem theme/blocksy-child -Recurse -Filter *.php | ForEach-Object { php -l $_.FullName; if ($LASTEXITCODE -ne 0) { throw "PHP lint failed: $($_.FullName)" } }; pwsh -File scripts/Smoke-Test.ps1 -Scope Catalog`.
 

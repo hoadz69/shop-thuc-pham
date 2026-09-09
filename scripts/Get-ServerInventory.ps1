@@ -94,7 +94,7 @@ if ($UpdateDoc) {
     else {
         $doc = $doc.TrimEnd() + "`n`n$block"
     }
-    Set-Content -LiteralPath $docPath -Value $doc -Encoding UTF8
+    Set-Content -LiteralPath $docPath -Value $doc.TrimEnd() -Encoding UTF8 -NoNewline
 }
 
 $json
