@@ -44,6 +44,16 @@ Một website WordPress chỉ phục hồi đầy đủ khi có đủ bốn thà
 9. Kiểm thử trang chủ, sản phẩm, ảnh, đăng nhập admin, COD, đơn hàng, QR và PWA.
 10. Chỉ chuyển DNS sau khi kiểm thử đạt.
 
+## Restore drill database tạm, không ảnh hưởng production
+
+1. Chọn một baseline đã chạy `scripts/Verify-Backup.ps1` và ghi lại checksum của dump trước khi thao tác.
+2. Tạo tên database UTC dạng `restore_test_yyyyMMddHHmmss`; dừng ngay nếu tên không khớp `^restore_test_[0-9]{14}$`.
+3. Tạo database/user tạm, cấp quyền chỉ trên đúng database tạm. Không sửa `wp-config.php`, Nginx, site URL hoặc kết nối WordPress production.
+4. Import `database.sql.gz` vào database tạm bằng credential truyền qua file bảo vệ quyền `600`, không đặt password trên command line hay log.
+5. Query `information_schema.tables` để đếm bảng; xác nhận có các bảng hậu tố `_options`, `_posts`, `_postmeta`, rồi query số dòng options/posts để chứng minh dump đọc được.
+6. Ghi kết quả không chứa credential hoặc dữ liệu khách hàng. Xác minh lại tên bằng regex trước khi chạy đúng một lệnh drop database tạm.
+7. Xóa file credential tạm theo đường dẫn cụ thể. Không trỏ bất kỳ vhost hay WordPress runtime nào vào database drill.
+
 ## Mất phiên Codex nhưng máy và repository còn
 
 Phiên mới thực hiện theo thứ tự:

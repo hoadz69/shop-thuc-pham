@@ -50,6 +50,8 @@ Cập nhật: 2026-09-09, múi giờ Asia/Ho_Chi_Minh.
 - Task 1 đã qua review yêu cầu và review chất lượng độc lập; không còn issue Critical/Important/Minor. Checkbox Task 1 trong implementation plan đã được đánh dấu để phiên mới tiếp tục đúng Task 2.
 - Task 2 đã thêm preflight và inventory chỉ đọc có thể lặp lại. TDD: RED 0/3 do script chưa tồn tại; GREEN 3/3 bằng Pester 6.1.0. Khảo sát thật xác nhận host `hoadz98`, UID 0, web root `www:www:755`, còn 41.679.504 KiB, các binary backup có sẵn và WP-CLI chưa có.
 - Inventory tự động lúc `2026-09-09T04:13:06Z`: WordPress 7.1, theme `twentytwentyfive`, WooCommerce bật, Akismet/Hello tắt, 0 sản phẩm, 0 đơn kiểu post, 5 trang và 12 upload. PHP CLI vẫn báo OPcache/zip/mbstring nạp lặp; chưa thay đổi server.
+- Tasks 3–4 đã tạo baseline UTC `20260909T041847Z` tại server `/www/backup/site/thuc-pham-thuy-trang/20260909T041847Z` và local ignored `backups/20260909T041847Z-baseline`. Remote checksum 4/4 OK; local verifier PASS checksum, gzip/tar, path safety, uploads có file và các bảng hậu tố `_options`, `_posts`, `_postmeta` cùng marker dữ liệu.
+- Kích thước artifact: DB 304.976 byte, uploads 19.268 byte, source 58.853.291 byte, environment 245 byte; file/manifest quyền `600`, thư mục backup remote `700`. Pester backup/verifier PASS 9/9, gồm fixture checksum sai, SQL thiếu cấu trúc WordPress và uploads rỗng. Restore drill tạm đã được ghi vào runbook; production chưa bị trỏ vào database khác.
 
 ## Hiện trạng quan trọng
 
@@ -60,8 +62,8 @@ Cập nhật: 2026-09-09, múi giờ Asia/Ho_Chi_Minh.
 
 ## Bước tiếp theo
 
-1. Thực hiện Task 3–4: tạo baseline backup database + uploads/source, tải bản ngoài VPS và xác minh checksum/cấu trúc.
-2. Chỉ sau khi backup đạt mới cài WP-CLI và bắt đầu thay đổi WordPress theo Task 5 trở đi.
+1. Thực hiện Task 5: cài WP-CLI có xác minh và audit checksum WordPress core.
+2. Nếu core hợp lệ, tiếp tục Task 6–9 để có giao diện storefront deploy cho người dùng kiểm tra bằng mắt.
 
 ## Việc chưa chốt
 

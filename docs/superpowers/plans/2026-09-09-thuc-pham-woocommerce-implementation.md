@@ -136,21 +136,21 @@ git commit -m "ops: automate read-only server inventory"
 - Modify: `.gitignore`
 - Modify: `docs/sessions/CURRENT.md`
 
-- [ ] **Step 1: Viết test thất bại cho fail-closed backup**
+- [x] **Step 1: Viết test thất bại cho fail-closed backup**
 
 Mock SSH/SCP và xác nhận: disk check chạy trước dump; remote artifact nằm dưới `/www/backup/site/thuc-pham-thuy-trang/<UTC timestamp>`; local artifact nằm dưới thư mục ignored `backups/`; khi checksum lệch thì script dừng trước mọi thay đổi khác.
 
-- [ ] **Step 2: Chạy test và xác nhận đỏ**
+- [x] **Step 2: Chạy test và xác nhận đỏ**
 
 Run: `Invoke-Pester tests/powershell/BackupBaseline.Tests.ps1 -Output Detailed`
 
 Expected: FAIL vì script backup chưa tồn tại.
 
-- [ ] **Step 3: Cài remote backup script**
+- [x] **Step 3: Cài remote backup script**
 
 Script Bash phải dùng `set -Eeuo pipefail`, kiểm tra web root tuyệt đối, đọc DB credentials bên trong VPS qua WordPress bootstrap mà không in chúng, chạy `mysqldump --single-transaction --quick --skip-lock-tables`, tạo `uploads.tar.gz` và `site-source.tar.gz` loại trừ cache/backup, sinh `environment.txt` cùng `SHA256SUMS`, rồi đặt quyền `600` cho dump/manifest và `700` cho thư mục backup.
 
-- [ ] **Step 4: Viết test thất bại và cài verifier local**
+- [x] **Step 4: Viết test thất bại và cài verifier local**
 
 Tạo fixtures checksum đúng/sai trong `$TestDrive`; mock các chương trình archive; xác nhận checksum sai, archive hỏng hoặc dump không có cả marker `CREATE TABLE` và `INSERT INTO` đều làm verifier thoát khác `0`.
 
@@ -164,11 +164,11 @@ Run: `Invoke-Pester tests/powershell/VerifyBackup.Tests.ps1 -Output Detailed`
 
 Expected sau cài đặt: PASS.
 
-- [ ] **Step 5: Cài orchestration local và ignore artifact**
+- [x] **Step 5: Cài orchestration local và ignore artifact**
 
 `Backup-Baseline.ps1` phải upload script vào một file tạm cụ thể dưới `/tmp`, chạy nó, luôn xóa đúng file tạm bằng trap, tải toàn bộ artifact về thư mục `backups` có tên timestamp do script trả về, gọi `Verify-Backup.ps1`, và chỉ in đường dẫn/timestamp/kích thước/checksum. Thêm `/backups/` vào `.gitignore`.
 
-- [ ] **Step 6: Chạy offline tests và tạo backup thật**
+- [x] **Step 6: Chạy offline tests và tạo backup thật**
 
 Run: `Invoke-Pester tests/powershell/BackupBaseline.Tests.ps1,tests/powershell/VerifyBackup.Tests.ps1 -Output Detailed`
 
@@ -178,7 +178,7 @@ Run: `pwsh -File scripts/Backup-Baseline.ps1`
 
 Expected: có `database.sql.gz`, `uploads.tar.gz`, `site-source.tar.gz`, `environment.txt`, `SHA256SUMS` ở server và local; không thay đổi WordPress.
 
-- [ ] **Step 7: Ghi bằng chứng vào handoff và commit**
+- [x] **Step 7: Ghi bằng chứng vào handoff và commit**
 
 Ghi timestamp, đường dẫn local/remote, kích thước và trạng thái xác minh; không ghi DB name/user/password nếu chúng không cần cho restore operator.
 
@@ -194,27 +194,27 @@ git commit -m "ops: create verified off-server baseline backup"
 - Modify: `tests/powershell/VerifyBackup.Tests.ps1`
 - Modify: `docs/runbooks/continuity-and-recovery.md`
 
-- [ ] **Step 1: Mở rộng test thất bại cho kiểm tra cấu trúc WordPress**
+- [x] **Step 1: Mở rộng test thất bại cho kiểm tra cấu trúc WordPress**
 
 Thêm fixtures có SQL chung nhưng không có bảng WordPress và archive uploads không chứa entry nào. Xác nhận cả hai trường hợp đều làm verifier thoát khác `0`; fixture hợp lệ phải có ít nhất `wp_options`, `wp_posts`, `wp_postmeta` và một entry uploads an toàn.
 
-- [ ] **Step 2: Chạy test và xác nhận đỏ**
+- [x] **Step 2: Chạy test và xác nhận đỏ**
 
 Run: `Invoke-Pester tests/powershell/VerifyBackup.Tests.ps1 -Output Detailed`
 
 Expected: FAIL vì verifier chưa kiểm tra cấu trúc WordPress tối thiểu.
 
-- [ ] **Step 3: Cài verifier và quy trình restore tạm**
+- [x] **Step 3: Cài verifier và quy trình restore tạm**
 
 Mở rộng verifier để xác nhận dump có các bảng hậu tố `_options`, `_posts`, `_postmeta` mà không giả định prefix là `wp_`, và archive uploads có ít nhất một entry không phải path tuyệt đối/`..`. Runbook phải mô tả restore vào database tạm có tên timestamp, query số bảng/options, rồi drop đúng database tạm sau khi tên đã khớp regex `^restore_test_[0-9]{14}$`; không trỏ Nginx hoặc WordPress production vào DB tạm.
 
-- [ ] **Step 4: Chạy verifier trên baseline thật**
+- [x] **Step 4: Chạy verifier trên baseline thật**
 
 Run: `$BaselineBackup = Get-ChildItem -LiteralPath backups -Directory | Sort-Object LastWriteTime -Descending | Select-Object -First 1; pwsh -File scripts/Verify-Backup.ps1 -BackupPath $BaselineBackup.FullName`
 
 Expected: tất cả checksum trùng, hai tar và gzip đọc được, SQL có cấu trúc WordPress.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```powershell
 git add scripts/Verify-Backup.ps1 tests/powershell/VerifyBackup.Tests.ps1 docs/runbooks/continuity-and-recovery.md
