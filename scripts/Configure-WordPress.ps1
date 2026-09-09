@@ -7,6 +7,13 @@ param(
 $ErrorActionPreference = 'Stop'
 . (Join-Path $PSScriptRoot 'lib\Project.Common.ps1')
 $config = Import-ProjectConfig -Path $ConfigPath
+$aboutPath = Join-Path $PSScriptRoot '..\data\pages\gioi-thieu.html'
+$contactPath = Join-Path $PSScriptRoot '..\data\pages\lien-he.html'
+foreach ($contentPath in @($aboutPath, $contactPath)) {
+    if (-not (Test-Path -LiteralPath $contentPath -PathType Leaf)) { throw 'Required page content file is missing.' }
+}
+$about64 = [Convert]::ToBase64String([Text.Encoding]::UTF8.GetBytes((Get-Content -Raw -LiteralPath $aboutPath)))
+$contact64 = [Convert]::ToBase64String([Text.Encoding]::UTF8.GetBytes((Get-Content -Raw -LiteralPath $contactPath)))
 if ( -not $Apply ) {
     [pscustomobject]@{ Status = 'DRY-RUN'; Target = $config.ProjectWebRoot; Changes = 'WordPress and WooCommerce desired state' }
     return
@@ -34,8 +41,8 @@ $upsert = static function ( $slug, $title, $content = '' ) {
     return wp_insert_post( $data );
 };
 $home_id = $upsert( 'trang-chu', 'Trang chủ' );
-$upsert( 'gioi-thieu', 'Giới thiệu', '<h2>Thực phẩm gần gũi cho bữa cơm gia đình</h2><p>Trang giới thiệu đang được hoàn thiện với thông tin chính thức.</p>' );
-$upsert( 'lien-he', 'Liên hệ', '<h2>Liên hệ Thực phẩm Thủy Trang</h2><p>Thông tin liên hệ chính thức sẽ được cập nhật tại đây.</p>' );
+$upsert( 'gioi-thieu', 'Giới thiệu', base64_decode( '__ABOUT_CONTENT__' ) );
+$upsert( 'lien-he', 'Liên hệ', base64_decode( '__CONTACT_CONTENT__' ) );
 $shop_id = function_exists( 'wc_get_page_id' ) ? wc_get_page_id( 'shop' ) : (int) get_option( 'woocommerce_shop_page_id' );
 if ( $shop_id > 0 ) { wp_update_post( array( 'ID' => $shop_id, 'post_name' => 'products', 'post_title' => 'Sản phẩm' ) ); }
 foreach ( array( 'cart' => 'cart', 'checkout' => 'checkout', 'myaccount' => 'tai-khoan' ) as $key => $slug ) {
@@ -47,6 +54,7 @@ update_option( 'page_on_front', $home_id );
 flush_rewrite_rules();
 echo wp_json_encode( array( 'home' => $home_id, 'shop' => $shop_id ) );
 '@
+$php = $php.Replace('__ABOUT_CONTENT__', $about64).Replace('__CONTACT_CONTENT__', $contact64)
 $encoded = [Convert]::ToBase64String([Text.Encoding]::UTF8.GetBytes($php))
 $root = $config.ProjectWebRoot
 $command = "wp eval 'eval(base64_decode(`"$encoded`"));' --path='$root' --allow-root"

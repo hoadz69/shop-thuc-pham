@@ -443,21 +443,21 @@ git commit -m "feat: build responsive storefront experience"
 - Create: `docs/operations/product-and-order-management.md`
 - Modify: `scripts/Configure-WordPress.ps1`
 
-- [ ] **Step 1: Viết test nội dung**
+- [x] **Step 1: Viết test nội dung**
 
 Test xác nhận không có số điện thoại/email/địa chỉ bịa đặt; nội dung liên hệ nêu rõ kênh chính thức sẽ được cập nhật; HTML không chứa script/iframe; script upsert page theo slug.
 
-- [ ] **Step 2: Chạy test đỏ, thêm nội dung và hướng dẫn, chạy test xanh**
+- [x] **Step 2: Chạy test đỏ, thêm nội dung và hướng dẫn, chạy test xanh**
 
 Run: `Invoke-Pester tests/powershell/ConfigureWordPress.Tests.ps1 -Output Detailed`
 
 Expected trước thay đổi: FAIL; sau thay đổi: PASS.
 
-- [ ] **Step 3: Deploy trang và kiểm tra quyền quản trị**
+- [x] **Step 3: Deploy trang và kiểm tra quyền quản trị**
 
 Upsert hai trang, đăng nhập bằng tài khoản quản trị do người dùng quản lý, thêm/sửa một sản phẩm kiểm thử, đổi trạng thái một đơn test, rồi hoàn tác dữ liệu kiểm thử theo đúng ID vừa tạo.
 
-- [ ] **Step 4: Commit**
+- [x] **Step 4: Commit**
 
 ```powershell
 git add data/pages scripts/Configure-WordPress.ps1 tests/powershell/ConfigureWordPress.Tests.ps1 docs/operations/product-and-order-management.md

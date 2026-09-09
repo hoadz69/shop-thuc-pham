@@ -63,6 +63,7 @@ Cập nhật: 2026-09-09, múi giờ Asia/Ho_Chi_Minh.
 - Visual review bằng Playwright/Edge đạt ở desktop 1440px và mobile thật 390px: không overflow ngang, không còn title shop trùng, hero/bốn cam kết/danh mục/product grid rõ, hamburger cùng bottom nav 4 mục truy cập được. Ảnh bằng chứng local ignored nằm trong `backups/visual-check` (`products-desktop-approved.png`, `home-mobile-approved.png`).
 - Đã liệt kê taxonomy trước thay đổi, rồi chuyển `default_product_cat` từ term ID 15 sang ID 16 và xóa đúng term rỗng ID 15 “Chưa phân loại”; hiện còn đúng 7 danh mục mong muốn. Smoke Catalog cuối PASS cho HTTP, Blocksy child và 12 sản phẩm. Toàn bộ Pester tại checkpoint PASS 51/51.
 - Giao diện public để người dùng kiểm tra bằng mắt: `http://103.77.240.28/`; shop: `http://103.77.240.28/products/`. Commit checkpoint source đầu tiên: `3a7b617`; commit chứa handoff hoàn tất Task 9 là commit mới nhất (xem `git log -1`).
+- Task 10 hoàn thành: nội dung version-control cho `/gioi-thieu/` và `/lien-he/` được upsert, không có contact giả/script/iframe; cả hai HTTP 200. Hướng dẫn quản trị sản phẩm và đơn COD nằm tại `docs/operations/product-and-order-management.md`; Pester cấu hình PASS 7/7. Đã xác nhận có đúng 1 administrator, tạo/sửa/xóa sạch đúng một draft product workflow test; kiểm tra lại không còn draft test.
 
 ## Hiện trạng quan trọng
 
@@ -73,8 +74,8 @@ Cập nhật: 2026-09-09, múi giờ Asia/Ho_Chi_Minh.
 
 ## Bước tiếp theo
 
-1. Chờ người dùng kiểm tra giao diện bằng mắt và ghi nhận phản hồi thiết kế.
-2. Sau phản hồi, tiếp tục Task 10: nội dung Giới thiệu/Liên hệ và tài liệu quản trị; rồi Task 11–13 (QR, PWA checkpoint HTTP, COD acceptance).
+1. Tiếp tục Task 11–13: QR, PWA checkpoint HTTP và COD acceptance.
+2. Hoàn tất push GitHub sau khi người dùng xác nhận cửa sổ đăng nhập tài khoản `hoadz69`; remote đã chọn là `https://github.com/hoadz69/shop-thuc-pham.git`.
 3. Task 14 vẫn chờ domain/quyền DNS/SSL; website IP tiếp tục vận hành và QR/PWA chưa được tuyên bố hoàn chỉnh.
 
 ## Việc chưa chốt
