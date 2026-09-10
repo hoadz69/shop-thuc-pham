@@ -46,10 +46,29 @@ function tt_product_contact_panel() {
 	if ( ! $phone && ! $email ) { return; }
 	?>
 	<aside class="tt-product-contact" aria-labelledby="tt-product-contact-title">
-		<div><p class="tt-eyebrow"><?php esc_html_e( 'Cần tư vấn thêm?', 'thuc-pham-thuy-trang' ); ?></p><h2 id="tt-product-contact-title"><?php esc_html_e( 'Liên hệ đặt hàng', 'thuc-pham-thuy-trang' ); ?></h2><p><?php esc_html_e( 'Trao đổi nhanh về số lượng, thời gian giao và sản phẩm phù hợp.', 'thuc-pham-thuy-trang' ); ?></p></div>
+		<div class="tt-product-contact__heading">
+			<span class="tt-product-contact__mark" aria-hidden="true">
+				<svg viewBox="0 0 24 24"><path d="M7.5 4.5h-2A1.5 1.5 0 0 0 4 6c0 7.73 6.27 14 14 14a1.5 1.5 0 0 0 1.5-1.5v-2l-4-1-1 2a12.1 12.1 0 0 1-8-8l2-1-1-4Z"/></svg>
+			</span>
+			<div>
+				<p class="tt-eyebrow"><?php esc_html_e( 'Tư vấn & đặt hàng', 'thuc-pham-thuy-trang' ); ?></p>
+				<h2 id="tt-product-contact-title"><?php esc_html_e( 'Liên hệ nhanh với Thủy Trang', 'thuc-pham-thuy-trang' ); ?></h2>
+			</div>
+		</div>
+		<p class="tt-product-contact__description"><?php esc_html_e( 'Chúng tôi hỗ trợ chọn sản phẩm, số lượng và thời gian giao phù hợp.', 'thuc-pham-thuy-trang' ); ?></p>
 		<div class="tt-product-contact__actions">
-			<?php if ( $phone ) : ?><a class="tt-button" href="tel:<?php echo esc_attr( preg_replace( '/[^0-9+]/', '', $phone ) ); ?>"><?php esc_html_e( 'Gọi', 'thuc-pham-thuy-trang' ); ?> <?php echo esc_html( $phone ); ?></a><?php endif; ?>
-			<?php if ( $email ) : ?><a class="tt-text-link" href="mailto:<?php echo esc_attr( antispambot( $email ) ); ?>"><?php esc_html_e( 'Gửi email', 'thuc-pham-thuy-trang' ); ?></a><?php endif; ?>
+			<?php if ( $phone ) : ?>
+				<a class="tt-contact-action tt-contact-action--phone" href="tel:<?php echo esc_attr( preg_replace( '/[^0-9+]/', '', $phone ) ); ?>">
+					<span class="tt-contact-action__icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M7.5 4.5h-2A1.5 1.5 0 0 0 4 6c0 7.73 6.27 14 14 14a1.5 1.5 0 0 0 1.5-1.5v-2l-4-1-1 2a12.1 12.1 0 0 1-8-8l2-1-1-4Z"/></svg></span>
+					<span><small><?php esc_html_e( 'Hotline đặt hàng', 'thuc-pham-thuy-trang' ); ?></small><strong><?php echo esc_html( $phone ); ?></strong></span>
+				</a>
+			<?php endif; ?>
+			<?php if ( $email ) : ?>
+				<a class="tt-contact-action tt-contact-action--email" href="mailto:<?php echo esc_attr( antispambot( $email ) ); ?>">
+					<span class="tt-contact-action__icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 6.5h16v11H4z"/><path d="m4.5 7 7.5 6 7.5-6"/></svg></span>
+					<span><small><?php esc_html_e( 'Tư vấn qua email', 'thuc-pham-thuy-trang' ); ?></small><strong><?php esc_html_e( 'Gửi email', 'thuc-pham-thuy-trang' ); ?></strong></span>
+				</a>
+			<?php endif; ?>
 		</div>
 	</aside>
 	<?php
