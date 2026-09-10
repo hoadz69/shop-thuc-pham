@@ -41,6 +41,36 @@ function tt_topbar() {
 }
 add_action( 'blocksy:header:before', 'tt_topbar' );
 
+function tt_site_header() {
+	$logo_url = get_stylesheet_directory_uri() . '/assets/images/logo-thuy-trang.svg';
+	$items = array(
+		home_url( '/' )            => 'Trang chủ',
+		home_url( '/products/' )   => 'Sản phẩm',
+		home_url( '/bai-viet/' )   => 'Bài viết',
+		home_url( '/doi-tac/' )    => 'Đối tác',
+		home_url( '/gioi-thieu/' ) => 'Giới thiệu',
+		home_url( '/lien-he/' )    => 'Liên hệ',
+	);
+	?>
+	<header id="tt-site-header" class="tt-site-header" itemscope itemtype="https://schema.org/WPHeader">
+		<div class="tt-shell tt-site-header__inner">
+			<a class="tt-site-logo" href="<?php echo esc_url( home_url( '/' ) ); ?>" aria-label="<?php echo esc_attr( get_bloginfo( 'name' ) ); ?>">
+				<img src="<?php echo esc_url( $logo_url ); ?>" alt="<?php echo esc_attr( get_bloginfo( 'name' ) ); ?>" width="360" height="88">
+			</a>
+			<nav id="tt-main-nav" class="tt-main-nav" aria-label="<?php esc_attr_e( 'Menu chính', 'thuc-pham-thuy-trang' ); ?>">
+				<?php foreach ( $items as $url => $label ) : ?><a href="<?php echo esc_url( $url ); ?>"><?php echo esc_html( $label ); ?></a><?php endforeach; ?>
+			</nav>
+			<div class="tt-header-actions">
+				<a href="<?php echo esc_url( home_url( '/?s=' ) ); ?>" aria-label="<?php esc_attr_e( 'Tìm kiếm', 'thuc-pham-thuy-trang' ); ?>"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6"></circle><path d="m16 16 4 4"></path></svg></a>
+				<a href="<?php echo esc_url( home_url( '/tai-khoan/' ) ); ?>" aria-label="<?php esc_attr_e( 'Tài khoản', 'thuc-pham-thuy-trang' ); ?>"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4"></circle><path d="M4.5 21c.8-4.1 3.3-6.2 7.5-6.2s6.7 2.1 7.5 6.2"></path></svg></a>
+				<button class="tt-menu-toggle" type="button" aria-expanded="false" aria-controls="tt-main-nav"><span></span><span></span><span></span><span class="screen-reader-text"><?php esc_html_e( 'Mở menu', 'thuc-pham-thuy-trang' ); ?></span></button>
+			</div>
+		</div>
+	</header>
+	<?php
+}
+add_action( 'blocksy:header:before', 'tt_site_header', 20 );
+
 function tt_mobile_navigation() {
 	if ( is_admin() ) { return; }
 	?>
