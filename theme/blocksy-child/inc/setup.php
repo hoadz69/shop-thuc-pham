@@ -23,6 +23,24 @@ function tt_body_classes( $classes ) {
 }
 add_filter( 'body_class', 'tt_body_classes' );
 
+function tt_topbar() {
+	$phone = function_exists( 'tt_store_setting' ) ? tt_store_setting( 'phone' ) : '';
+	$email = function_exists( 'tt_store_setting' ) ? tt_store_setting( 'email' ) : '';
+	if ( ! $phone && ! $email ) { return; }
+	?>
+	<div class="tt-topbar">
+		<div class="tt-shell tt-topbar__inner">
+			<span><?php esc_html_e( 'Thực phẩm tươi sạch, giao hàng tận tâm', 'thuc-pham-thuy-trang' ); ?></span>
+			<div class="tt-topbar__contact">
+				<?php if ( $phone ) : ?><a href="tel:<?php echo esc_attr( preg_replace( '/[^0-9+]/', '', $phone ) ); ?>"><?php esc_html_e( 'Điện thoại:', 'thuc-pham-thuy-trang' ); ?> <?php echo esc_html( $phone ); ?></a><?php endif; ?>
+				<?php if ( $email ) : ?><a href="mailto:<?php echo esc_attr( antispambot( $email ) ); ?>"><?php echo esc_html( antispambot( $email ) ); ?></a><?php endif; ?>
+			</div>
+		</div>
+	</div>
+	<?php
+}
+add_action( 'blocksy:header:before', 'tt_topbar' );
+
 function tt_mobile_navigation() {
 	if ( is_admin() ) { return; }
 	?>

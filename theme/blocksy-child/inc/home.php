@@ -4,6 +4,10 @@ defined( 'ABSPATH' ) || exit;
 function tt_homepage_markup() {
 	$shop_url = function_exists( 'wc_get_page_permalink' ) ? wc_get_page_permalink( 'shop' ) : home_url( '/products/' );
 	$hero_url = get_stylesheet_directory_uri() . '/assets/images/hero-fresh-market.png';
+	$category_url = static function ( $slug ) use ( $shop_url ) {
+		$term = get_term_by( 'slug', $slug, 'product_cat' );
+		return $term && ! is_wp_error( $term ) ? get_term_link( $term ) : $shop_url;
+	};
 	ob_start();
 	?>
 	<div class="tt-home">
@@ -44,16 +48,52 @@ function tt_homepage_markup() {
 			</div>
 		</section>
 
-		<section class="tt-weekly"><div class="tt-shell tt-weekly__inner"><div><p class="tt-eyebrow"><?php esc_html_e( 'Gợi ý cho gia đình', 'thuc-pham-thuy-trang' ); ?></p><h2><?php esc_html_e( 'Thực phẩm tươi sạch mỗi tuần', 'thuc-pham-thuy-trang' ); ?></h2><p><?php esc_html_e( 'Lên thực đơn dễ dàng với rau củ, thịt cá và đồ khô thiết yếu trong cùng một đơn hàng.', 'thuc-pham-thuy-trang' ); ?></p></div><a class="tt-button tt-button--light" href="<?php echo esc_url( $shop_url ); ?>"><?php esc_html_e( 'Khám phá thực đơn', 'thuc-pham-thuy-trang' ); ?></a></div></section>
+		<section class="tt-weekly"><div class="tt-shell">
+			<div class="tt-weekly__header"><div><p class="tt-eyebrow"><?php esc_html_e( 'Gợi ý cho gia đình', 'thuc-pham-thuy-trang' ); ?></p><h2><?php esc_html_e( 'Thực phẩm tươi sạch mỗi tuần', 'thuc-pham-thuy-trang' ); ?></h2><p><?php esc_html_e( 'Lên thực đơn dễ dàng với rau củ, thịt cá và đồ khô thiết yếu trong cùng một đơn hàng.', 'thuc-pham-thuy-trang' ); ?></p></div><a class="tt-button tt-button--light" href="<?php echo esc_url( $shop_url ); ?>"><?php esc_html_e( 'Xem tất cả', 'thuc-pham-thuy-trang' ); ?></a></div>
+			<div class="tt-weekly-grid">
+				<a class="tt-weekly-card tt-weekly-card--green" href="<?php echo esc_url( $category_url( 'rau-cu-qua-tuoi' ) ); ?>"><span><?php esc_html_e( 'Tươi mỗi ngày', 'thuc-pham-thuy-trang' ); ?></span><strong><?php esc_html_e( 'Rau củ theo mùa', 'thuc-pham-thuy-trang' ); ?></strong><small><?php esc_html_e( 'Nhẹ nhàng cho bữa cơm nhà', 'thuc-pham-thuy-trang' ); ?></small></a>
+				<a class="tt-weekly-card tt-weekly-card--gold" href="<?php echo esc_url( $category_url( 'thit-heo' ) ); ?>"><span><?php esc_html_e( 'Gợi ý hôm nay', 'thuc-pham-thuy-trang' ); ?></span><strong><?php esc_html_e( 'Thịt tươi dễ chế biến', 'thuc-pham-thuy-trang' ); ?></strong><small><?php esc_html_e( 'Chọn nhanh theo nhu cầu', 'thuc-pham-thuy-trang' ); ?></small></a>
+				<a class="tt-weekly-card tt-weekly-card--cream" href="<?php echo esc_url( $category_url( 'do-kho' ) ); ?>"><span><?php esc_html_e( 'Luôn sẵn trong bếp', 'thuc-pham-thuy-trang' ); ?></span><strong><?php esc_html_e( 'Đồ khô tiện lợi', 'thuc-pham-thuy-trang' ); ?></strong><small><?php esc_html_e( 'Dễ bảo quản, dễ kết hợp', 'thuc-pham-thuy-trang' ); ?></small></a>
+			</div>
+		</div></section>
 
 		<section class="tt-featured tt-shell"><div class="tt-section-heading"><div><p class="tt-eyebrow"><?php esc_html_e( 'Gian hàng hôm nay', 'thuc-pham-thuy-trang' ); ?></p><h2><?php esc_html_e( 'Sản phẩm nổi bật', 'thuc-pham-thuy-trang' ); ?></h2></div></div>
 		<?php
-		$query = new WP_Query( array( 'post_type' => 'product', 'post_status' => 'publish', 'posts_per_page' => 8, 'meta_key' => '_featured', 'meta_value' => 'yes' ) );
-		if ( ! $query->have_posts() ) { $query = new WP_Query( array( 'post_type' => 'product', 'post_status' => 'publish', 'posts_per_page' => 8 ) ); }
-		if ( $query->have_posts() ) { echo '<ul class="products columns-4">'; while ( $query->have_posts() ) { $query->the_post(); wc_get_template_part( 'content', 'product' ); } echo '</ul>'; } else { echo '<p>' . esc_html__( 'Sản phẩm mẫu đang được cập nhật.', 'thuc-pham-thuy-trang' ) . '</p>'; }
+		$query = new WP_Query( array( 'post_type' => 'product', 'post_status' => 'publish', 'posts_per_page' => 4, 'meta_key' => '_featured', 'meta_value' => 'yes' ) );
+		if ( ! $query->have_posts() ) { $query = new WP_Query( array( 'post_type' => 'product', 'post_status' => 'publish', 'posts_per_page' => 4 ) ); }
+		$featured_ids = array();
+		if ( $query->have_posts() ) { echo '<ul class="products columns-4">'; while ( $query->have_posts() ) { $query->the_post(); $featured_ids[] = get_the_ID(); wc_get_template_part( 'content', 'product' ); } echo '</ul>'; } else { echo '<p>' . esc_html__( 'Sản phẩm mẫu đang được cập nhật.', 'thuc-pham-thuy-trang' ) . '</p>'; }
 		wp_reset_postdata();
 		?>
 		</section>
+
+		<section class="tt-category-products tt-shell">
+			<div class="tt-section-heading"><div><p class="tt-eyebrow"><?php esc_html_e( 'Đi chợ gọn hơn', 'thuc-pham-thuy-trang' ); ?></p><h2><?php esc_html_e( 'Sản phẩm theo danh mục', 'thuc-pham-thuy-trang' ); ?></h2></div><a href="<?php echo esc_url( $shop_url ); ?>"><?php esc_html_e( 'Xem tất cả', 'thuc-pham-thuy-trang' ); ?> →</a></div>
+			<div class="tt-mini-product-grid">
+			<?php
+			$more_products = new WP_Query( array( 'post_type' => 'product', 'post_status' => 'publish', 'posts_per_page' => 6, 'post__not_in' => $featured_ids ) );
+			while ( $more_products->have_posts() ) : $more_products->the_post();
+				$product = wc_get_product( get_the_ID() );
+				if ( ! $product ) { continue; }
+				$product_terms = get_the_terms( get_the_ID(), 'product_cat' );
+				$category_name = $product_terms && ! is_wp_error( $product_terms ) ? $product_terms[0]->name : '';
+				?>
+				<article class="tt-mini-product">
+					<a class="tt-mini-product__image" href="<?php the_permalink(); ?>"><?php echo wp_kses_post( $product->get_image( 'woocommerce_thumbnail', array( 'loading' => 'lazy' ) ) ); ?></a>
+					<div><span><?php echo esc_html( $category_name ); ?></span><h3><a href="<?php the_permalink(); ?>"><?php the_title(); ?></a></h3><div class="tt-mini-product__price"><?php echo wp_kses_post( $product->get_price_html() ); ?></div></div>
+				</article>
+			<?php endwhile; wp_reset_postdata(); ?>
+			</div>
+		</section>
+
+		<section class="tt-tips"><div class="tt-shell">
+			<div class="tt-section-heading"><div><p class="tt-eyebrow"><?php esc_html_e( 'Mẹo nhỏ mỗi ngày', 'thuc-pham-thuy-trang' ); ?></p><h2><?php esc_html_e( 'Chọn thực phẩm dễ hơn', 'thuc-pham-thuy-trang' ); ?></h2></div></div>
+			<div class="tt-tip-grid">
+				<article class="tt-tip-card"><span aria-hidden="true">01</span><h3><?php esc_html_e( 'Chọn rau củ tươi', 'thuc-pham-thuy-trang' ); ?></h3><p><?php esc_html_e( 'Ưu tiên rau củ có màu tự nhiên, bề mặt nguyên vẹn và phù hợp với nhu cầu trong tuần.', 'thuc-pham-thuy-trang' ); ?></p></article>
+				<article class="tt-tip-card"><span aria-hidden="true">02</span><h3><?php esc_html_e( 'Bảo quản đúng cách', 'thuc-pham-thuy-trang' ); ?></h3><p><?php esc_html_e( 'Phân loại thực phẩm trước khi làm lạnh và dùng hộp kín để giữ hương vị tốt hơn.', 'thuc-pham-thuy-trang' ); ?></p></article>
+				<article class="tt-tip-card"><span aria-hidden="true">03</span><h3><?php esc_html_e( 'Lên thực đơn trước', 'thuc-pham-thuy-trang' ); ?></h3><p><?php esc_html_e( 'Chuẩn bị danh sách món giúp mua vừa đủ, tiết kiệm thời gian và hạn chế lãng phí.', 'thuc-pham-thuy-trang' ); ?></p></article>
+			</div>
+		</div></section>
 	</div>
 	<?php
 	return ob_get_clean();

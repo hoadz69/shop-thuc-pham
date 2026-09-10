@@ -1,6 +1,6 @@
 # Trạng thái phiên hiện tại
 
-Cập nhật: 2026-09-09, múi giờ Asia/Ho_Chi_Minh.
+Cập nhật: 2026-09-10, múi giờ Asia/Ho_Chi_Minh.
 
 ## Sau khi khởi động lại máy
 
@@ -17,6 +17,7 @@ Implementation plan có đúng 14 task. Task 1–13 đã hoàn thành; Task 14 S
 
 ## Phiên đang làm
 
+- Phiên 2026-09-10 (tiếp): người dùng phản hồi khối **Sản phẩm nổi bật** còn thô và vỡ bố cục so với website tham chiếu. Khảo sát xác định CSS card chủ yếu bị giới hạn dưới selector `.woocommerce`, trong khi trang chủ không có wrapper này; màu link/nút mặc định của Blocksy vì thế lộ ra. Mục tiêu là sửa selector đúng phạm vi, giảm lưới nổi bật còn bốn sản phẩm và kiểm tra lại desktop/mobile trước deploy.
 - Phiên 2026-09-10: người dùng yêu cầu khôi phục/dọn lại footer trang chủ theo các khối liên hệ, danh mục, bản tin và bản quyền của website tham chiếu; đồng thời cần một nơi quản trị tập trung để đổi nhanh tên cửa hàng, số điện thoại, email và địa chỉ cho các website sau. Git sạch trước thay đổi; khảo sát xác nhận child theme hiện chưa có footer riêng và Blocksy chỉ đang xuất một dòng bản quyền mặc định.
 - Phiên 2026-09-09 hiện tại: tiếp tục từ Task 2 đến khi có giao diện deploy trên VPS để người dùng kiểm tra bằng mắt; giữ nguyên `.git`, `config/local.ps1` và không ghi đè thay đổi không rõ nguồn gốc.
 - Working tree được xác nhận sạch trên `main` trước khi bắt đầu. Mọi khảo sát VPS vẫn chỉ đọc cho đến khi baseline backup ngoài VPS vượt qua kiểm tra checksum/cấu trúc.
@@ -74,6 +75,10 @@ Implementation plan có đúng 14 task. Task 1–13 đã hoàn thành; Task 14 S
 - Đã thêm **Giao diện → Tùy biến → Thông tin cửa hàng** để sửa tập trung `blogname`, mô tả, điện thoại, email, địa chỉ, giờ làm việc, Facebook và Zalo. Danh mục footer lấy động từ taxonomy WooCommerce. Form bản tin có nonce, honeypot, validation email/đồng ý chính sách và chuyển tiếp đăng ký qua `wp_mail`, không lưu email vào database.
 - Deploy theme lên site IP thành công; PHP lint PASS cho hai file mới, hook footer và tám control Customizer runtime PASS, smoke `All` PASS. Pester toàn bộ PASS 58/58 sau mọi thay đổi. Kiểm tra HTML xác nhận footer, liên hệ, bảy danh mục hiện có, bản tin và bản quyền đều có; ảnh desktop/mobile full-page nằm trong `backups/visual-check` (ignored).
 - Trước deploy, script đã tạo rollback theme hợp lệ nhưng phát hiện lỗi cũ khiến tên archive là chuỗi literal `$(date...)`. Archive đã được kiểm tra gzip/tar/SHA-256 và sao chép bảo toàn thành `/www/backup/site/thuc-pham-thuy-trang/deploy/20260910T022431Z-footer-predeploy.tar.gz`, SHA-256 `97bd0bb193c0222233aa68600dc9fa28a22c5cd94db9e882ca70dc44e492d1e8`. Script deploy đã sửa dùng timestamp shell thật và thêm test chống tái diễn.
+- Phiên 2026-09-10 tiếp tục rà toàn trang chủ theo phản hồi người dùng và website tham chiếu. Root cause của card nổi bật bị “phèn/nát” là selector `.woocommerce ...` không áp dụng trên front page; đã thêm style scoped `.tt-featured`, giảm 8 xuống 4 card, thống nhất ảnh/danh mục/tên/giá/nút, hover và lưới 2 cột mobile.
+- Đã bổ sung topbar liên hệ, chỉnh header gọn hơn, xóa khoảng đệm thừa trước hero, mở rộng khối thực phẩm mỗi tuần thành ba thẻ gợi ý, thêm sáu sản phẩm động theo danh mục và ba thẻ mẹo chọn/bảo quản thực phẩm. Không sao chép source/ảnh của website tham chiếu; dữ liệu WooCommerce và hành vi thêm giỏ vẫn giữ nguyên.
+- Đã kiểm tra Playwright full-page tại 1440x1000 và 390x844: trang chủ không tràn ngang, heading wrap đúng, footer/mobile nav hoạt động; đồng thời rà trực quan `/products/` và một trang chi tiết sản phẩm, bố cục vẫn đồng nhất. Ảnh bằng chứng ignored: `home-final-desktop-20260910.png`, `home-final-mobile-20260910.png`, `shop-audit-desktop-20260910.png`, `product-audit-desktop-20260910.png`.
+- PHP lint cho `home.php` và `setup.php` PASS, Pester toàn bộ PASS 58/58, smoke `All` PASS. Rollback gần nhất đã xác minh gzip/tar tại `/www/backup/site/thuc-pham-thuy-trang/deploy/20260910T071439Z-blocksy-child.tar.gz`, SHA-256 `684ac7fdb8647a14af8f815fecbf579516151002ff693468d0f986463e8aa227`.
 
 ## Hiện trạng quan trọng
 
@@ -84,7 +89,7 @@ Implementation plan có đúng 14 task. Task 1–13 đã hoàn thành; Task 14 S
 
 ## Bước tiếp theo
 
-1. Người dùng kiểm tra footer mới tại site IP và điền giờ làm việc/Facebook/Zalo trong **Giao diện → Tùy biến → Thông tin cửa hàng** khi có dữ liệu thật.
+1. Người dùng kiểm tra toàn bộ giao diện mới tại site IP; ảnh 12 sản phẩm hiện vẫn là placeholder chung và cần thay bằng ảnh thật trong **Sản phẩm → Tất cả sản phẩm** để đạt chất lượng hình ảnh như website tham chiếu.
 2. Khi người dùng cung cấp domain, quyền DNS và maintenance window: chạy Task 14 Step 2–5 theo `docs/runbooks/domain-https-cutover.md`.
 3. Hoàn tất push GitHub sau khi người dùng xác nhận cửa sổ đăng nhập tài khoản `hoadz69`; remote đã chọn là `https://github.com/hoadz69/shop-thuc-pham.git`.
 
