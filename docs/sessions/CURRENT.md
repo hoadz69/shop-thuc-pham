@@ -17,6 +17,7 @@ Implementation plan có đúng 14 task. Task 1–13 đã hoàn thành; Task 14 S
 
 ## Phiên đang làm
 
+- Phiên 2026-09-10: người dùng yêu cầu khôi phục/dọn lại footer trang chủ theo các khối liên hệ, danh mục, bản tin và bản quyền của website tham chiếu; đồng thời cần một nơi quản trị tập trung để đổi nhanh tên cửa hàng, số điện thoại, email và địa chỉ cho các website sau. Git sạch trước thay đổi; khảo sát xác nhận child theme hiện chưa có footer riêng và Blocksy chỉ đang xuất một dòng bản quyền mặc định.
 - Phiên 2026-09-09 hiện tại: tiếp tục từ Task 2 đến khi có giao diện deploy trên VPS để người dùng kiểm tra bằng mắt; giữ nguyên `.git`, `config/local.ps1` và không ghi đè thay đổi không rõ nguồn gốc.
 - Working tree được xác nhận sạch trên `main` trước khi bắt đầu. Mọi khảo sát VPS vẫn chỉ đọc cho đến khi baseline backup ngoài VPS vượt qua kiểm tra checksum/cấu trúc.
 - Người dùng từng yêu cầu dừng khi hạn mức còn khoảng 2%, sau đó yêu cầu tiếp tục ngay trong cùng phiên. Một commit checkpoint đã được tạo trước khi tiếp tục; không bắt đầu Task 10–14 trong checkpoint giao diện này.
@@ -69,6 +70,10 @@ Implementation plan có đúng 14 task. Task 1–13 đã hoàn thành; Task 14 S
 - Task 12 hoàn thành ở checkpoint HTTP: đã đánh giá SuperPWA 2.2.48 và PWA for WP 1.7.88 từ WordPress.org, rồi chọn plugin riêng `tt-pwa` không lưu database để kiểm soát cache WooCommerce. Plugin đã deploy/active và remote lint PASS. Manifest/worker/icon đều HTTP 200, manifest JSON có name/short name/start URL/display/màu/icon same-origin 192/512, worker scope `/`; chính sách bỏ qua admin/login/cart/checkout/account/non-GET/nonce/Woo AJAX/add-to-cart. Pester PASS 7/7 cùng smoke All PASS. Vì origin vẫn là HTTP/IP, đăng ký service worker chủ động SKIP với trạng thái `waiting-https`; chưa tuyên bố installable.
 - Task 13 hoàn thành: checkout đã kiểm tra trực quan bằng Edge/Playwright ở desktop 1440px và mobile 390px với SKU `TT-RAU-001`, tổng 25.000 VND và duy nhất COD. Order test ID 38 được tạo bằng WooCommerce CRUD (email test bị tắt), xác minh SKU/qty/subtotal/total/currency/payment/status, chuyển processing → completed, rồi xóa vĩnh viễn đúng ID; kiểm tra cuối `orders=0`, `order38=absent`. Smoke All PASS và không thấy recent PHP fatal/parse error. Checklist cùng acceptance report không chứa credential/dữ liệu khách hàng thật.
 - Task 14 Step 1 hoàn thành không gây thay đổi VPS: đã thêm runbook domain/HTTPS, rollback và hai biến URL rỗng vào config mẫu. Cutover dừng đúng cổng vì chưa có domain thuộc quyền người dùng, quyền DNS/aaPanel/Cloudflare và maintenance window; chưa tạo backup pre-cutover vì chưa bắt đầu cutover, chưa đổi WordPress URL/Nginx/DNS/SSL. Site IP, QR thử và PWA checkpoint vẫn vận hành.
+- Phiên 2026-09-10 đã bổ sung footer riêng của child theme với ba khối responsive: địa chỉ liên hệ, danh mục sản phẩm động và bản tin; thay dòng bản quyền mặc định của Blocksy. Thông tin mặc định đã được điền đúng dữ liệu người dùng cung cấp: `0967068059`, `thuytrangfood@gmail.com`, `Xóm Trung Tâm, Xã Phú Xuyên, Tỉnh Thái Nguyên`; giờ làm việc/mạng xã hội để trống sẽ được ẩn thay vì hiện nhãn rỗng.
+- Đã thêm **Giao diện → Tùy biến → Thông tin cửa hàng** để sửa tập trung `blogname`, mô tả, điện thoại, email, địa chỉ, giờ làm việc, Facebook và Zalo. Danh mục footer lấy động từ taxonomy WooCommerce. Form bản tin có nonce, honeypot, validation email/đồng ý chính sách và chuyển tiếp đăng ký qua `wp_mail`, không lưu email vào database.
+- Deploy theme lên site IP thành công; PHP lint PASS cho hai file mới, hook footer và tám control Customizer runtime PASS, smoke `All` PASS. Pester toàn bộ PASS 58/58 sau mọi thay đổi. Kiểm tra HTML xác nhận footer, liên hệ, bảy danh mục hiện có, bản tin và bản quyền đều có; ảnh desktop/mobile full-page nằm trong `backups/visual-check` (ignored).
+- Trước deploy, script đã tạo rollback theme hợp lệ nhưng phát hiện lỗi cũ khiến tên archive là chuỗi literal `$(date...)`. Archive đã được kiểm tra gzip/tar/SHA-256 và sao chép bảo toàn thành `/www/backup/site/thuc-pham-thuy-trang/deploy/20260910T022431Z-footer-predeploy.tar.gz`, SHA-256 `97bd0bb193c0222233aa68600dc9fa28a22c5cd94db9e882ca70dc44e492d1e8`. Script deploy đã sửa dùng timestamp shell thật và thêm test chống tái diễn.
 
 ## Hiện trạng quan trọng
 
@@ -79,9 +84,9 @@ Implementation plan có đúng 14 task. Task 1–13 đã hoàn thành; Task 14 S
 
 ## Bước tiếp theo
 
-1. Khi người dùng cung cấp domain, quyền DNS và maintenance window: chạy Task 14 Step 2–5 theo `docs/runbooks/domain-https-cutover.md`.
-2. Hoàn tất push GitHub sau khi người dùng xác nhận cửa sổ đăng nhập tài khoản `hoadz69`; remote đã chọn là `https://github.com/hoadz69/shop-thuc-pham.git`.
-3. Task 14 vẫn chờ domain/quyền DNS/SSL; website IP tiếp tục vận hành và QR/PWA chưa được tuyên bố hoàn chỉnh.
+1. Người dùng kiểm tra footer mới tại site IP và điền giờ làm việc/Facebook/Zalo trong **Giao diện → Tùy biến → Thông tin cửa hàng** khi có dữ liệu thật.
+2. Khi người dùng cung cấp domain, quyền DNS và maintenance window: chạy Task 14 Step 2–5 theo `docs/runbooks/domain-https-cutover.md`.
+3. Hoàn tất push GitHub sau khi người dùng xác nhận cửa sổ đăng nhập tài khoản `hoadz69`; remote đã chọn là `https://github.com/hoadz69/shop-thuc-pham.git`.
 
 ## Việc chưa chốt
 

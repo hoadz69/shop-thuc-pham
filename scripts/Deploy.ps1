@@ -34,7 +34,7 @@ set -Eeuo pipefail
 archive='$remoteArchive'
 stage='/tmp/tt-stage-$id'
 target='$target'
-rollback='/www/backup/site/thuc-pham-thuy-trang/deploy/`$(date -u +%Y%m%dT%H%M%SZ)-$($spec.Slug).tar.gz'
+rollback="/www/backup/site/thuc-pham-thuy-trang/deploy/`$(date -u +%Y%m%dT%H%M%SZ)-$($spec.Slug).tar.gz"
 trap 'rm -f -- "`$archive"; rm -rf -- "`$stage"' EXIT
 mkdir -p -- "`$stage" /www/backup/site/thuc-pham-thuy-trang/deploy
 chmod 700 /www/backup/site/thuc-pham-thuy-trang/deploy

@@ -14,6 +14,16 @@ Truy cập `/wp-admin` bằng tài khoản quản trị do chủ cửa hàng qu�
 
 Không sửa trực tiếp dữ liệu bằng phpMyAdmin nếu thao tác tương ứng có trong WordPress.
 
+## Sửa nhanh tên website và thông tin liên hệ
+
+1. Mở **Giao diện → Tùy biến → Thông tin cửa hàng**.
+2. Tại đây có thể sửa tập trung tên website, mô tả ngắn, số điện thoại, email, địa chỉ, giờ làm việc, Facebook và Zalo.
+3. Chọn **Đăng** rồi tải lại trang chủ để kiểm tra footer trên máy tính và điện thoại.
+
+Tên website dùng cài đặt chuẩn `blogname` của WordPress nên thay đổi sẽ áp dụng cho cả header, tiêu đề trang và footer. Giờ làm việc hoặc liên kết mạng xã hội để trống sẽ được ẩn, tránh xuất hiện nhãn không có nội dung. Danh mục ở footer được lấy tự động từ **Sản phẩm → Danh mục**, không cần sửa trong code.
+
+Form bản tin gửi thông báo đăng ký đến **Email liên hệ** trong mục này và không lưu danh sách email vào database WordPress. Việc gửi thư còn phụ thuộc cấu hình mail của máy chủ; nếu gửi thất bại, giao diện sẽ báo người dùng thử lại.
+
 ## Xử lý đơn COD
 
 1. Mở **WooCommerce → Đơn hàng** và đối chiếu tên, số điện thoại, địa chỉ, sản phẩm, số lượng và tổng tiền.
