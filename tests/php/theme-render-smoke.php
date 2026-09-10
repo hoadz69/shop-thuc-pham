@@ -12,7 +12,7 @@ if ( false === strpos( $home, "'posts_per_page' => 4" ) ) { fwrite( STDERR, "Fea
 foreach ( array( 'WC_Widget_Product_Categories', 'WC_Widget_Price_Filter' ) as $needle ) {
 	if ( false === strpos( $woo, $needle ) ) { fwrite( STDERR, "Missing $needle\n" ); exit( 1 ); }
 }
-foreach ( array( 'woocommerce_loop_add_to_cart_link', 'Xem chi tiết', 'tt-product-contact', 'Liên hệ đặt hàng' ) as $needle ) {
+foreach ( array( 'woocommerce_loop_add_to_cart_link', 'Xem chi tiết', 'tt-product-contact', 'Liên hệ đặt hàng', 'woocommerce_is_purchasable', 'woocommerce_variation_is_purchasable', 'woocommerce_add_to_cart_validation', 'woocommerce_template_single_add_to_cart', 'TT_Product_QR::render_frontend' ) as $needle ) {
 	if ( false === strpos( $woo, $needle ) ) { fwrite( STDERR, "Missing catalog behavior $needle\n" ); exit( 1 ); }
 }
 foreach ( array( 'customize_register', 'Thông tin cửa hàng', 'blogname', 'tt_phone', 'tt_email', 'tt_address' ) as $needle ) {

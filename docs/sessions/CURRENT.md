@@ -17,6 +17,7 @@ Implementation plan có đúng 14 task. Task 1–13 đã hoàn thành; Task 14 S
 
 ## Phiên đang làm
 
+- Phiên 2026-09-10 (catalog-only tạm thời): đã bỏ toàn bộ **Thêm vào giỏ hàng** và chuyển website sang chỉ xem/liên hệ như website tham chiếu. WooCommerce vô hiệu hóa purchasable/add-to-cart bằng filter có thể gỡ lại, trang chi tiết không còn control mua và bottom nav mobile đã đổi từ Giỏ hàng sang Liên hệ; cart/checkout cùng dữ liệu vẫn được giữ để có thể bật lại sau.
 - Phiên 2026-09-10 (catalog/header): người dùng chỉ rõ trang `/product/73/gio` của website tham chiếu và yêu cầu card dùng **Xem chi tiết**, trang sản phẩm có CTA **Liên hệ**, header đúng sáu mục cùng biểu tượng tài khoản và logo rau củ. Khảo sát public xác nhận website tham chiếu là catalog: khách chưa đăng nhập vẫn chỉ thấy “Liên hệ”, không có nút mua. Triển khai sẽ giữ cart/COD trong trang chi tiết theo brief đã duyệt nhưng bỏ nút thêm giỏ ở các card, thêm liên hệ nổi bật và dựng header/logo SVG riêng không sao chép asset của bên kia.
 - Phiên 2026-09-10 (tiếp): người dùng phản hồi khối **Sản phẩm nổi bật** còn thô và vỡ bố cục so với website tham chiếu. Khảo sát xác định CSS card chủ yếu bị giới hạn dưới selector `.woocommerce`, trong khi trang chủ không có wrapper này; màu link/nút mặc định của Blocksy vì thế lộ ra. Mục tiêu là sửa selector đúng phạm vi, giảm lưới nổi bật còn bốn sản phẩm và kiểm tra lại desktop/mobile trước deploy.
 - Phiên 2026-09-10: người dùng yêu cầu khôi phục/dọn lại footer trang chủ theo các khối liên hệ, danh mục, bản tin và bản quyền của website tham chiếu; đồng thời cần một nơi quản trị tập trung để đổi nhanh tên cửa hàng, số điện thoại, email và địa chỉ cho các website sau. Git sạch trước thay đổi; khảo sát xác nhận child theme hiện chưa có footer riêng và Blocksy chỉ đang xuất một dòng bản quyền mặc định.
@@ -85,16 +86,19 @@ Implementation plan có đúng 14 task. Task 1–13 đã hoàn thành; Task 14 S
 - Đã thêm hai trang version-controlled `/bai-viet/` (ID 39) và `/doi-tac/` (ID 40), chạy desired-state thành công. Trước thay đổi database/theme đã tạo và xác minh backup đầy đủ UTC `20260910T073846Z` ở remote/local ignored, tổng local 77.802.009 byte, verifier PASS.
 - Sau deploy: HTML xác nhận header/logo/6 menu/account, card trang chủ `4 Xem chi tiết / 0 Thêm vào giỏ`, shop `12 / 0`, trang chi tiết có cả liên hệ và add-to-cart; hai trang mới HTTP 200. PHP lint PASS, Pester 58/58, smoke `All` PASS, Playwright desktop/mobile PASS. Rollback theme gần nhất `/www/backup/site/thuc-pham-thuy-trang/deploy/20260910T073938Z-blocksy-child.tar.gz`, SHA-256 `24583ad62f77d6b300cb9be0a0bdb0332dcb3cc0a06d0ca4adcc43f1475dd098`.
 
+- Chế độ catalog-only tạm thời đã deploy: card trang chủ/shop chỉ còn **Xem chi tiết**; trang sản phẩm có 0 chuỗi **Thêm vào giỏ hàng**, 0 form cart, hiện panel **Liên hệ đặt hàng** với gọi/email; product ID 34 trả is_purchasable() = false, nên request thêm giỏ trực tiếp cũng bị chặn phía server. Bottom nav mobile đổi **Giỏ hàng** thành **Liên hệ**. Không xóa trang/dữ liệu cart, checkout, gateway COD hay đơn hàng.
+- Khi WooCommerce đánh dấu sản phẩm không thể mua, Blocksy không chạy vị trí summary cũ của plugin QR; theme đã di chuyển QR vào phần mô tả ngắn cùng panel liên hệ để QR tiếp tục xuất hiện và payload vẫn đúng permalink. PHP lint PASS, Pester 58/58, smoke All PASS; HTML và Playwright 390px xác nhận CTA/QR hiển thị, không có control mua. Rollback theme đã xác minh gzip/tar tại /www/backup/site/thuc-pham-thuy-trang/deploy/20260910T080432Z-blocksy-child.tar.gz, 4.535.414 byte, SHA-256 be3cc03850fb923f3018d590213d4fb2eed4d8da1970a7235be778fa770a64e9. Commit catalog-only là commit mới nhất chứa handoff này (xem git log -1).
+
 ## Hiện trạng quan trọng
 
 - Server đang chạy website trực tiếp từ `/www/wwwroot/103.77.240.28`.
-- Chưa có WP-CLI, Git repo trên server hoặc backup site/database quan sát được.
-- Website hiện gần như trống: 0 sản phẩm, 0 đơn hàng, theme mặc định.
-- Chưa thực hiện thay đổi nào trên server trong các phiên khảo sát.
+- WP-CLI 2.12.0 đã cài; backup baseline/full và rollback deploy được lưu ngoài web root dưới /www/backup/site/thuc-pham-thuy-trang.
+- Website chạy WordPress 7.1, Blocksy child, WooCommerce với 12 sản phẩm mẫu và hiện không có đơn hàng.
+- Website đang ở catalog-only tạm thời: sản phẩm chỉ xem/liên hệ, add-to-cart bị chặn; cấu hình cart/checkout/COD được giữ để bật lại khi cần.
 
 ## Bước tiếp theo
 
-1. Người dùng kiểm tra toàn bộ giao diện mới tại site IP; ảnh 12 sản phẩm hiện vẫn là placeholder chung và cần thay bằng ảnh thật trong **Sản phẩm → Tất cả sản phẩm** để đạt chất lượng hình ảnh như website tham chiếu.
+1. Người dùng kiểm tra chế độ chỉ xem/liên hệ tại site IP; ảnh 12 sản phẩm hiện vẫn là placeholder chung và cần thay bằng ảnh thật trong **Sản phẩm → Tất cả sản phẩm** để đạt chất lượng hình ảnh như website tham chiếu.
 2. Khi người dùng cung cấp domain, quyền DNS và maintenance window: chạy Task 14 Step 2–5 theo `docs/runbooks/domain-https-cutover.md`.
 3. Hoàn tất push GitHub sau khi người dùng xác nhận cửa sổ đăng nhập tài khoản `hoadz69`; remote đã chọn là `https://github.com/hoadz69/shop-thuc-pham.git`.
 

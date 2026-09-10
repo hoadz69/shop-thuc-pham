@@ -78,7 +78,7 @@ function tt_mobile_navigation() {
 		<a href="<?php echo esc_url( home_url( '/' ) ); ?>"><span aria-hidden="true">⌂</span><?php esc_html_e( 'Trang chủ', 'thuc-pham-thuy-trang' ); ?></a>
 		<a href="<?php echo esc_url( home_url( '/products/' ) ); ?>"><span aria-hidden="true">▦</span><?php esc_html_e( 'Sản phẩm', 'thuc-pham-thuy-trang' ); ?></a>
 		<a href="<?php echo esc_url( home_url( '/?s=' ) ); ?>"><span aria-hidden="true">⌕</span><?php esc_html_e( 'Tìm kiếm', 'thuc-pham-thuy-trang' ); ?></a>
-		<a href="<?php echo esc_url( function_exists( 'wc_get_cart_url' ) ? wc_get_cart_url() : home_url( '/cart/' ) ); ?>"><span aria-hidden="true">◉</span><?php esc_html_e( 'Giỏ hàng', 'thuc-pham-thuy-trang' ); ?></a>
+		<a href="<?php echo esc_url( home_url( '/lien-he/' ) ); ?>"><span aria-hidden="true">☎</span><?php esc_html_e( 'Liên hệ', 'thuc-pham-thuy-trang' ); ?></a>
 	</nav>
 	<?php
 }

@@ -17,6 +17,28 @@ function tt_loop_details_link( $html, $product ) {
 }
 add_filter( 'woocommerce_loop_add_to_cart_link', 'tt_loop_details_link', 20, 2 );
 
+function tt_catalog_mode_not_purchasable() {
+	return false;
+}
+add_filter( 'woocommerce_is_purchasable', 'tt_catalog_mode_not_purchasable', 99 );
+add_filter( 'woocommerce_variation_is_purchasable', 'tt_catalog_mode_not_purchasable', 99 );
+
+function tt_catalog_mode_block_add_to_cart() {
+	if ( function_exists( 'wc_add_notice' ) ) {
+		wc_add_notice( __( 'Website hiện ở chế độ xem sản phẩm. Vui lòng liên hệ để đặt hàng.', 'thuc-pham-thuy-trang' ), 'notice' );
+	}
+	return false;
+}
+add_filter( 'woocommerce_add_to_cart_validation', 'tt_catalog_mode_block_add_to_cart', 99 );
+
+function tt_catalog_mode_remove_purchase_controls() {
+	remove_action( 'woocommerce_single_product_summary', 'woocommerce_template_single_add_to_cart', 30 );
+	if ( class_exists( 'TT_Product_QR' ) ) {
+		remove_action( 'woocommerce_single_product_summary', array( 'TT_Product_QR', 'render_frontend' ), 36 );
+	}
+}
+add_action( 'wp', 'tt_catalog_mode_remove_purchase_controls' );
+
 function tt_product_contact_panel() {
 	if ( ! is_product() || ! function_exists( 'tt_store_setting' ) ) { return; }
 	$phone = tt_store_setting( 'phone' );
@@ -32,7 +54,16 @@ function tt_product_contact_panel() {
 	</aside>
 	<?php
 }
-add_action( 'woocommerce_single_product_summary', 'tt_product_contact_panel', 35 );
+function tt_catalog_mode_append_contact( $description ) {
+	if ( ! is_product() ) { return $description; }
+	ob_start();
+	tt_product_contact_panel();
+	if ( class_exists( 'TT_Product_QR' ) ) {
+		TT_Product_QR::render_frontend();
+	}
+	return $description . ob_get_clean();
+}
+add_filter( 'woocommerce_short_description', 'tt_catalog_mode_append_contact', 20 );
 
 function tt_shop_intro() {
 	if ( is_shop() ) { echo '<div class="tt-shop-intro"><p class="tt-eyebrow">' . esc_html__( 'Chợ trực tuyến', 'thuc-pham-thuy-trang' ) . '</p><h1>' . esc_html__( 'Sản phẩm tươi ngon', 'thuc-pham-thuy-trang' ) . '</h1><p>' . esc_html__( 'Lọc theo danh mục hoặc mức giá để chọn nhanh thực phẩm phù hợp.', 'thuc-pham-thuy-trang' ) . '</p></div>'; }
