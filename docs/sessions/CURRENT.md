@@ -17,6 +17,7 @@ Implementation plan có đúng 14 task. Task 1–13 đã hoàn thành; Task 14 S
 
 ## Phiên đang làm
 
+- Phiên 2026-09-11 (domain/logo): DNS và HTTPS của `thucphamthuytrang.site` đã được xác nhận hoạt động; đang sửa favicon còn rơi về logo WordPress mặc định do option `site_icon=0`. Mục tiêu là dùng icon Thủy Trang đồng bộ với PWA, backup trước thay đổi database, deploy nhỏ và kiểm tra lại browser/smoke.
 - Phiên 2026-09-10 (tinh chỉnh CTA sản phẩm): đã cho khối tư vấn/liên hệ trong cột thông tin sản phẩm chảy dọc xuống dưới mô tả và thay bố cục link/nút rời rạc bằng card liên hệ thống nhất. Hai hành động có cùng kiểu/kích thước và tự xếp một cột trên mobile.
 - Phiên 2026-09-10 (catalog-only tạm thời): đã bỏ toàn bộ **Thêm vào giỏ hàng** và chuyển website sang chỉ xem/liên hệ như website tham chiếu. WooCommerce vô hiệu hóa purchasable/add-to-cart bằng filter có thể gỡ lại, trang chi tiết không còn control mua và bottom nav mobile đã đổi từ Giỏ hàng sang Liên hệ; cart/checkout cùng dữ liệu vẫn được giữ để có thể bật lại sau.
 - Phiên 2026-09-10 (catalog/header): người dùng chỉ rõ trang `/product/73/gio` của website tham chiếu và yêu cầu card dùng **Xem chi tiết**, trang sản phẩm có CTA **Liên hệ**, header đúng sáu mục cùng biểu tượng tài khoản và logo rau củ. Khảo sát public xác nhận website tham chiếu là catalog: khách chưa đăng nhập vẫn chỉ thấy “Liên hệ”, không có nút mua. Triển khai sẽ giữ cart/COD trong trang chi tiết theo brief đã duyệt nhưng bỏ nút thêm giỏ ở các card, thêm liên hệ nổi bật và dựng header/logo SVG riêng không sao chép asset của bên kia.
@@ -92,17 +93,20 @@ Implementation plan có đúng 14 task. Task 1–13 đã hoàn thành; Task 14 S
 
 - Khối liên hệ trang chi tiết đã được thiết kế lại với thứ bậc rõ: biểu tượng/tựa đề, một dòng mô tả, sau đó hai nút Hotline và Email đồng bộ; desktop dùng lưới hai cột, mobile 390px xếp dọc. Đã kiểm tra trực quan đúng sản phẩm Nấm hương khô, không tràn ngang và vẫn giữ QR phía dưới. PHP lint PASS, Pester 58/58 và smoke All PASS. Rollback theme đã xác minh tại /www/backup/site/thuc-pham-thuy-trang/deploy/20260910T082536Z-blocksy-child.tar.gz, 4.535.468 byte, SHA-256 975a8abe157cc1af8c3a1ab5ea821f7a3e2faaaf7ce63549471e09f5d181ab9c.
 
+- Domain cutover thực tế đã hoàn thành ngày 2026-09-10: `thucphamthuytrang.site` và `www` phân giải tới `103.77.240.28`, canonical là `https://thucphamthuytrang.site`, WordPress `home/siteurl` đã dùng HTTPS. Let's Encrypt hợp lệ cho cả hai hostname đến 2026-12-09; Nginx test PASS, certbot timer active và certificate đang phục vụ khớp lineage. Smoke `All` trên domain PASS; backup pre-cutover local `20260910T101335Z-pre-domain-cutover` xác minh 4/4 PASS.
+- Phiên 2026-09-11 đã sửa favicon còn hiện logo WordPress do `site_icon=0`. Trước thay đổi đã tạo/xác minh backup remote/local `20260911T015122Z-pre-site-icon` (77.809.601 byte, PASS). Child theme có icon Thủy Trang PNG 512x512 và fallback `get_site_icon_url`; attachment quản lý ID 41 đã được đặt làm Site Icon. Sau deploy, PHP lint PASS, Pester 58/58, smoke `All` PASS; `/favicon.ico` chuyển tới ảnh upload Thủy Trang và icon HTML 32/192/Apple đều trả HTTP 200. Commit favicon là commit mới nhất liên quan (xem `git log -1`).
+
 ## Hiện trạng quan trọng
 
-- Server đang chạy website trực tiếp từ `/www/wwwroot/103.77.240.28`.
+- Server đang chạy website từ `/www/wwwroot/103.77.240.28`; URL public/canonical là `https://thucphamthuytrang.site`.
 - WP-CLI 2.12.0 đã cài; backup baseline/full và rollback deploy được lưu ngoài web root dưới /www/backup/site/thuc-pham-thuy-trang.
 - Website chạy WordPress 7.1, Blocksy child, WooCommerce với 12 sản phẩm mẫu và hiện không có đơn hàng.
 - Website đang ở catalog-only tạm thời: sản phẩm chỉ xem/liên hệ, add-to-cart bị chặn; cấu hình cart/checkout/COD được giữ để bật lại khi cần.
 
 ## Bước tiếp theo
 
-1. Người dùng kiểm tra chế độ chỉ xem/liên hệ tại site IP; ảnh 12 sản phẩm hiện vẫn là placeholder chung và cần thay bằng ảnh thật trong **Sản phẩm → Tất cả sản phẩm** để đạt chất lượng hình ảnh như website tham chiếu.
-2. Khi người dùng cung cấp domain, quyền DNS và maintenance window: chạy Task 14 Step 2–5 theo `docs/runbooks/domain-https-cutover.md`.
+1. Người dùng kiểm tra chế độ chỉ xem/liên hệ tại `https://thucphamthuytrang.site`; ảnh 12 sản phẩm hiện vẫn là placeholder chung và cần thay bằng ảnh thật trong **Sản phẩm → Tất cả sản phẩm** để đạt chất lượng hình ảnh như website tham chiếu.
+2. Hoàn tất nghiệm thu browser/PWA installability và quét ba QR canonical HTTPS để đóng Task 14.
 3. Hoàn tất push GitHub sau khi người dùng xác nhận cửa sổ đăng nhập tài khoản `hoadz69`; remote đã chọn là `https://github.com/hoadz69/shop-thuc-pham.git`.
 
 ## Việc chưa chốt
@@ -110,7 +114,7 @@ Implementation plan có đúng 14 task. Task 1–13 đã hoàn thành; Task 14 S
 - Quyền ghi `.git` đã hoạt động; các commit nhỏ theo task đang được tạo bình thường.
 - Logo, thông tin liên hệ, banner và ảnh sản phẩm chính thức.
 - Mức độ mô phỏng chi tiết giao diện website mẫu.
-- Domain cuối cùng và tài khoản Cloudflare/registrar.
+- Quyền/tài khoản registrar cần được chủ website tiếp tục bảo quản; DNS hiện do Spaceship quản lý và đã hoạt động.
 - Plugin QR miễn phí phù hợp WordPress/PHP hiện tại; cần khảo sát trước khi cài.
 
 ## Quy tắc kết thúc mỗi phiên

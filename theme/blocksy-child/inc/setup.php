@@ -9,6 +9,15 @@ function tt_setup_theme() {
 }
 add_action( 'after_setup_theme', 'tt_setup_theme' );
 
+function tt_site_icon_url( $url, $size, $blog_id ) {
+	if ( $url ) {
+		return $url;
+	}
+
+	return get_stylesheet_directory_uri() . '/assets/images/site-icon-512.png';
+}
+add_filter( 'get_site_icon_url', 'tt_site_icon_url', 10, 3 );
+
 function tt_enqueue_assets() {
 	$style_path = get_stylesheet_directory() . '/assets/css/site.css';
 	$script_path = get_stylesheet_directory() . '/assets/js/site.js';
