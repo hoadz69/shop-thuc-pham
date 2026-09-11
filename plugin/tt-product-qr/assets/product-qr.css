@@ -23,3 +23,22 @@
 	max-width: 100%;
 	height: auto;
 }
+
+.tt-storefront-print-link {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	margin-top: .35rem;
+	padding: .65rem 1rem;
+	border-radius: 8px;
+	background: #187642;
+	color: #fff;
+	font-weight: 700;
+	text-decoration: none;
+}
+
+.tt-storefront-print-link:hover,
+.tt-storefront-print-link:focus {
+	background: #105c31;
+	color: #fff;
+}

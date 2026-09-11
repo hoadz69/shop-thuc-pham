@@ -53,7 +53,12 @@ final class TT_Product_QR {
 		if ( ! $product instanceof WC_Product ) { return; }
 		echo '<section class="tt-product-qr-panel"><h2>' . esc_html__( 'Quét để mở sản phẩm', 'tt-product-qr' ) . '</h2>';
 		echo self::safe_qr_markup( $product->get_id() );
-		echo '<p>' . esc_html__( 'Quét mã để mở đúng trang chi tiết của sản phẩm.', 'tt-product-qr' ) . '</p></section>';
+		echo '<p>' . esc_html__( 'Quét mã để mở đúng trang chi tiết của sản phẩm.', 'tt-product-qr' ) . '</p>';
+		if ( current_user_can( 'edit_products' ) ) {
+			$url = wp_nonce_url( admin_url( 'admin-post.php?action=tt_print_product_qr&product_id=' . absint( $product->get_id() ) ), 'tt_print_product_qr_' . absint( $product->get_id() ) );
+			printf( '<a class="tt-storefront-print-link" href="%s" target="_blank" rel="noopener">%s</a>', esc_url( $url ), esc_html__( 'In tem QR', 'tt-product-qr' ) );
+		}
+		echo '</section>';
 	}
 
 	public static function add_meta_box() {

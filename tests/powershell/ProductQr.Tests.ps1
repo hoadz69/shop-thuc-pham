@@ -3,6 +3,7 @@ Describe 'Bulk product QR labels' {
         $root = Join-Path $PSScriptRoot '..\..'
         $source = Get-Content -Raw (Join-Path $root 'plugin\tt-product-qr\src\ProductQr.php')
         $printCss = Get-Content -Raw (Join-Path $root 'plugin\tt-product-qr\assets\print.css')
+        $frontendCss = Get-Content -Raw (Join-Path $root 'plugin\tt-product-qr\assets\product-qr.css')
     }
 
     It 'adds a product submenu with a selectable published-product list' {
@@ -25,5 +26,11 @@ Describe 'Bulk product QR labels' {
         $source | Should -Match 'window\.print'
         $printCss | Should -Match 'size:50mm 35mm'
         $printCss | Should -Match 'break-after:page'
+    }
+
+    It 'shows a protected print link on product pages only to product editors' {
+        $source | Should -Match "(?s)render_frontend.*current_user_can\( 'edit_products' \).*tt-storefront-print-link"
+        $source | Should -Match "wp_nonce_url\( admin_url\( 'admin-post\.php\?action=tt_print_product_qr"
+        $frontendCss | Should -Match '\.tt-storefront-print-link'
     }
 }

@@ -23,6 +23,8 @@ Không sửa trực tiếp dữ liệu bằng phpMyAdmin nếu thao tác tương
 5. Trong hộp thoại máy in, chọn đúng máy in tem và khổ giấy **50 × 35 mm**, tỷ lệ 100%, tắt header/footer của trình duyệt nếu có.
 6. Quét thử ít nhất một tem trong lô trước khi dán; QR phải mở đúng trang chi tiết sản phẩm trên `https://thucphamthuytrang.site`.
 
+Khi đang đăng nhập bằng Administrator hoặc Shop Manager, có thể mở trực tiếp một trang chi tiết sản phẩm ngoài storefront và chọn **In tem QR** bên dưới mã QR để in riêng mặt hàng đó. Nút này không hiển thị cho khách truy cập thông thường.
+
 QR chỉ lưu URL canonical của sản phẩm, không lưu giá. Đổi giá không làm hỏng QR, nhưng tem có in giá nên cần in lại nếu giá thay đổi. Không tự ý đổi **đường dẫn tĩnh/slug** sau khi đã in tem; nếu bắt buộc đổi, phải tạo redirect hoặc in lại tem để tránh QR cũ mở trang lỗi.
 
 ## Sửa nhanh tên website và thông tin liên hệ
