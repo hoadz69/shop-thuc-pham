@@ -17,6 +17,7 @@ Implementation plan có đúng 14 task. Task 1–13 đã hoàn thành; Task 14 S
 
 ## Phiên đang làm
 
+- Phiên 2026-09-11 (tài khoản bàn giao tạm): theo yêu cầu trực tiếp của người dùng, đã tạo tài khoản test `thuctrang` quyền Administrator. Email gốc đã thuộc tài khoản `qtri_thuytrang`, nên dùng Gmail plus-alias cùng hộp thư; mật khẩu tạm do người dùng chỉ định không được ghi vào Git/tài liệu. Phải nhắc xóa hoặc đổi mật khẩu ngay sau test.
 - Phiên 2026-09-11 (domain/logo): DNS và HTTPS của `thucphamthuytrang.site` đã được xác nhận hoạt động; đang sửa favicon còn rơi về logo WordPress mặc định do option `site_icon=0`. Mục tiêu là dùng icon Thủy Trang đồng bộ với PWA, backup trước thay đổi database, deploy nhỏ và kiểm tra lại browser/smoke.
 - Phiên 2026-09-10 (tinh chỉnh CTA sản phẩm): đã cho khối tư vấn/liên hệ trong cột thông tin sản phẩm chảy dọc xuống dưới mô tả và thay bố cục link/nút rời rạc bằng card liên hệ thống nhất. Hai hành động có cùng kiểu/kích thước và tự xếp một cột trên mobile.
 - Phiên 2026-09-10 (catalog-only tạm thời): đã bỏ toàn bộ **Thêm vào giỏ hàng** và chuyển website sang chỉ xem/liên hệ như website tham chiếu. WooCommerce vô hiệu hóa purchasable/add-to-cart bằng filter có thể gỡ lại, trang chi tiết không còn control mua và bottom nav mobile đã đổi từ Giỏ hàng sang Liên hệ; cart/checkout cùng dữ liệu vẫn được giữ để có thể bật lại sau.
@@ -95,6 +96,7 @@ Implementation plan có đúng 14 task. Task 1–13 đã hoàn thành; Task 14 S
 
 - Domain cutover thực tế đã hoàn thành ngày 2026-09-10: `thucphamthuytrang.site` và `www` phân giải tới `103.77.240.28`, canonical là `https://thucphamthuytrang.site`, WordPress `home/siteurl` đã dùng HTTPS. Let's Encrypt hợp lệ cho cả hai hostname đến 2026-12-09; Nginx test PASS, certbot timer active và certificate đang phục vụ khớp lineage. Smoke `All` trên domain PASS; backup pre-cutover local `20260910T101335Z-pre-domain-cutover` xác minh 4/4 PASS.
 - Phiên 2026-09-11 đã sửa favicon còn hiện logo WordPress do `site_icon=0`. Trước thay đổi đã tạo/xác minh backup remote/local `20260911T015122Z-pre-site-icon` (77.809.601 byte, PASS). Child theme có icon Thủy Trang PNG 512x512 và fallback `get_site_icon_url`; attachment quản lý ID 41 đã được đặt làm Site Icon. Sau deploy, PHP lint PASS, Pester 58/58, smoke `All` PASS; `/favicon.ico` chuyển tới ảnh upload Thủy Trang và icon HTML 32/192/Apple đều trả HTTP 200. Commit favicon là commit mới nhất liên quan (xem `git log -1`).
+- Đã tạo tài khoản Administrator tạm `thuctrang` (user ID 2) theo yêu cầu người dùng; email dùng plus-alias của cùng hộp Gmail vì email gốc đã thuộc admin ID 1. Trước thay đổi đã tạo/xác minh backup `20260911T025004Z-pre-temp-admin` (78.064.057 byte, PASS). Kiểm tra runtime xác nhận đúng mật khẩu tạm và có cả capability `manage_options`/`edit_products`; mật khẩu không được ghi vào Git hay handoff. Tài khoản phải được đổi sang mật khẩu mạnh hoặc xóa ngay sau test.
 
 ## Hiện trạng quan trọng
 
