@@ -14,7 +14,7 @@ function tt_site_icon_url( $url, $size, $blog_id ) {
 		return $url;
 	}
 
-	return get_stylesheet_directory_uri() . '/assets/images/site-icon-512.png';
+	return get_stylesheet_directory_uri() . '/assets/images/site-icon-logo-512.png';
 }
 add_filter( 'get_site_icon_url', 'tt_site_icon_url', 10, 3 );
 
