@@ -4,6 +4,7 @@ defined( 'ABSPATH' ) || exit;
 function tt_homepage_markup() {
 	$shop_url = function_exists( 'wc_get_page_permalink' ) ? wc_get_page_permalink( 'shop' ) : home_url( '/products/' );
 	$hero_url = get_stylesheet_directory_uri() . '/assets/images/hero-fresh-market.png';
+	$woocommerce_ready = function_exists( 'wc_get_template_part' ) && function_exists( 'wc_get_product' ) && post_type_exists( 'product' );
 	$category_url = static function ( $slug ) use ( $shop_url ) {
 		$term = get_term_by( 'slug', $slug, 'product_cat' );
 		return $term && ! is_wp_error( $term ) ? get_term_link( $term ) : $shop_url;
@@ -59,10 +60,14 @@ function tt_homepage_markup() {
 
 		<section class="tt-featured tt-shell"><div class="tt-section-heading"><div><p class="tt-eyebrow"><?php esc_html_e( 'Gian hàng hôm nay', 'thuc-pham-thuy-trang' ); ?></p><h2><?php esc_html_e( 'Sản phẩm nổi bật', 'thuc-pham-thuy-trang' ); ?></h2></div></div>
 		<?php
-		$query = new WP_Query( array( 'post_type' => 'product', 'post_status' => 'publish', 'posts_per_page' => 4, 'meta_key' => '_featured', 'meta_value' => 'yes' ) );
-		if ( ! $query->have_posts() ) { $query = new WP_Query( array( 'post_type' => 'product', 'post_status' => 'publish', 'posts_per_page' => 4 ) ); }
 		$featured_ids = array();
-		if ( $query->have_posts() ) { echo '<ul class="products columns-4">'; while ( $query->have_posts() ) { $query->the_post(); $featured_ids[] = get_the_ID(); wc_get_template_part( 'content', 'product' ); } echo '</ul>'; } else { echo '<p>' . esc_html__( 'Sản phẩm mẫu đang được cập nhật.', 'thuc-pham-thuy-trang' ) . '</p>'; }
+		if ( $woocommerce_ready ) {
+			$query = new WP_Query( array( 'post_type' => 'product', 'post_status' => 'publish', 'posts_per_page' => 4, 'meta_key' => '_featured', 'meta_value' => 'yes' ) );
+			if ( ! $query->have_posts() ) { $query = new WP_Query( array( 'post_type' => 'product', 'post_status' => 'publish', 'posts_per_page' => 4 ) ); }
+			if ( $query->have_posts() ) { echo '<ul class="products columns-4">'; while ( $query->have_posts() ) { $query->the_post(); $featured_ids[] = get_the_ID(); wc_get_template_part( 'content', 'product' ); } echo '</ul>'; } else { echo '<p>' . esc_html__( 'Sản phẩm mẫu đang được cập nhật.', 'thuc-pham-thuy-trang' ) . '</p>'; }
+		} else {
+			echo '<p>' . esc_html__( 'Sản phẩm đang tạm thời được cập nhật.', 'thuc-pham-thuy-trang' ) . '</p>';
+		}
 		wp_reset_postdata();
 		?>
 		</section>
@@ -71,8 +76,8 @@ function tt_homepage_markup() {
 			<div class="tt-section-heading"><div><p class="tt-eyebrow"><?php esc_html_e( 'Đi chợ gọn hơn', 'thuc-pham-thuy-trang' ); ?></p><h2><?php esc_html_e( 'Sản phẩm theo danh mục', 'thuc-pham-thuy-trang' ); ?></h2></div><a href="<?php echo esc_url( $shop_url ); ?>"><?php esc_html_e( 'Xem tất cả', 'thuc-pham-thuy-trang' ); ?> →</a></div>
 			<div class="tt-mini-product-grid">
 			<?php
-			$more_products = new WP_Query( array( 'post_type' => 'product', 'post_status' => 'publish', 'posts_per_page' => 6, 'post__not_in' => $featured_ids ) );
-			while ( $more_products->have_posts() ) : $more_products->the_post();
+			$more_products = $woocommerce_ready ? new WP_Query( array( 'post_type' => 'product', 'post_status' => 'publish', 'posts_per_page' => 6, 'post__not_in' => $featured_ids ) ) : null;
+			while ( $more_products && $more_products->have_posts() ) : $more_products->the_post();
 				$product = wc_get_product( get_the_ID() );
 				if ( ! $product ) { continue; }
 				$product_terms = get_the_terms( get_the_ID(), 'product_cat' );

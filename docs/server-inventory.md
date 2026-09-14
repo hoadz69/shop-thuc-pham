@@ -52,6 +52,15 @@ Khảo sát chỉ đọc ngày 2026-09-09 qua SSH.
 
 PHP CLI báo một số module đã được nạp lặp (`OPcache`, `zip`, `mbstring`). Đây chưa phải blocker cho website nhưng cần ghi nhận và chỉ chỉnh khi có bằng chứng ảnh hưởng thực tế.
 
+## Trạng thái sau ứng cứu 2026-09-14
+
+- Sự cố WordPress bị xâm nhập đã được làm sạch theo `docs/incidents/2026-09-14-wordpress-compromise.md`.
+- WordPress 7.1 và WooCommerce 11.1.0 đã được cài lại từ WordPress.org; checksum cả hai PASS.
+- Plugin active: WooCommerce, `tt-product-qr`, `tt-pwa`; plugin File Manager lạ đã bị cô lập ngoài web root.
+- Chỉ còn một administrator hợp lệ là `qtri_thuytrang`; mật khẩu và salts đã được xoay.
+- Core/theme/plugin không writable bởi PHP-FPM user `www`; uploads vẫn writable nhưng Nginx từ chối thực thi PHP/PHTML/PHAR trong uploads.
+- Backup forensic đầy đủ UTC `20260914T041509Z` đã xác minh PASS và có bản ngoài VPS.
+
 ## Cần xác minh trước triển khai
 
 - WordPress `7.1` đã được WP-CLI nhận diện và `wp core verify-checksums` PASS ngày 2026-09-09.

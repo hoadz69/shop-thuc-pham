@@ -1,6 +1,6 @@
 # Trạng thái phiên hiện tại
 
-Cập nhật: 2026-09-10, múi giờ Asia/Ho_Chi_Minh.
+Cập nhật: 2026-09-14, múi giờ Asia/Ho_Chi_Minh.
 
 ## Sau khi khởi động lại máy
 
@@ -17,6 +17,8 @@ Implementation plan có đúng 14 task. Task 1–13 đã hoàn thành; Task 14 S
 
 ## Phiên đang làm
 
+- Phiên 2026-09-14 (ứng cứu giao diện/sự cố bảo mật): trang chủ production trả fatal tại `blocksy-child/inc/home.php:65` vì WooCommerce không còn được nạp. Khảo sát chỉ đọc phát hiện toàn bộ plugin dự án/WooCommerce đã bị xóa, `wp-file-manager` 8.0.4 lạ là plugin duy nhất active, tài khoản administrator lạ `gujzamuw` (ID 3) được tạo lúc 2026-09-14 01:16:17 và WordPress core checksum thất bại với nhiều file PHP lạ trong `wp-admin`/`wp-includes`. Mục tiêu phiên: tạo và xác minh backup forensic trước thay đổi; làm sạch chính xác IOC, cài lại core/plugin từ nguồn chuẩn, vô hiệu hóa tài khoản/session lạ, thêm guard tránh homepage fatal khi WooCommerce thiếu, deploy có rollback và kiểm thử lại giao diện/QR/PWA.
+- Ứng cứu 2026-09-14 đã hoàn tất: backup forensic `20260914T041509Z` (70.846.118 byte) PASS; IOC/File Manager được quarantine ngoài web root; WordPress 7.1, Blocksy 2.1.56 và WooCommerce 11.1.0 cài lại từ nguồn chính thức; child theme/QR/PWA deploy lại từ Git. Core + Woo checksum PASS, chỉ còn administrator hợp lệ ID 1 và ba plugin dự án mong muốn active. Mật khẩu admin/salts đã xoay, tài khoản lạ ID 3 và test ID 2 đã xóa, dashboard file editor bị tắt, code chuyển sang owner `root:www`, Nginx chặn PHP trong uploads. Guard homepage đã thêm để thiếu WooCommerce không còn làm fatal. Pester 64/64, PHP smoke 3/3, smoke All PASS; Playwright 1440/390px HTTP 200, đủ 4 card/footer, mobile không overflow. Báo cáo: `docs/incidents/2026-09-14-wordpress-compromise.md`; commit mới nhất xem `git log -1`.
 - Phiên 2026-09-11 (favicon trong suốt): người dùng phản hồi favicon mark logo còn nền trắng do bước render SVG sang PNG. Đã xuất lại PNG có alpha trong suốt, kiểm tra pixel góc, dùng attachment/URL mới tránh cache và xác minh favicon public.
 - Phiên 2026-09-11 (đồng bộ favicon với logo header): người dùng yêu cầu icon trên tab/title dùng đúng biểu tượng lá–nông sản nằm cạnh chữ trong logo trang chủ, thay icon giỏ hiện tại. Đã tái sử dụng vector logo gốc, tạo asset favicon URL mới để tránh cache, đặt làm WordPress Site Icon, kiểm tra HTML/`favicon.ico` và smoke.
 - Phiên 2026-09-11 (nút in ở storefront): theo yêu cầu người dùng, đã thêm nút **In tem QR** ngay trên trang chi tiết sản phẩm nhưng chỉ hiển thị cho tài khoản có capability `edit_products`; khách public vẫn chỉ thấy QR. Endpoint in đơn hiện có tiếp tục bảo vệ bằng capability và nonce.
@@ -112,12 +114,13 @@ Implementation plan có đúng 14 task. Task 1–13 đã hoàn thành; Task 14 S
 - WP-CLI 2.12.0 đã cài; backup baseline/full và rollback deploy được lưu ngoài web root dưới /www/backup/site/thuc-pham-thuy-trang.
 - Website chạy WordPress 7.1, Blocksy child, WooCommerce với 12 sản phẩm mẫu và hiện không có đơn hàng.
 - Website đang ở catalog-only tạm thời: sản phẩm chỉ xem/liên hệ, add-to-cart bị chặn; cấu hình cart/checkout/COD được giữ để bật lại khi cần.
+- Website đã phục hồi sau sự cố 2026-09-14; core/Woo checksum PASS, code không writable bởi PHP-FPM và uploads không được phép thực thi PHP.
 
 ## Bước tiếp theo
 
-1. Người dùng kiểm tra chế độ chỉ xem/liên hệ tại `https://thucphamthuytrang.site`; ảnh 12 sản phẩm hiện vẫn là placeholder chung và cần thay bằng ảnh thật trong **Sản phẩm → Tất cả sản phẩm** để đạt chất lượng hình ảnh như website tham chiếu.
-2. Hoàn tất nghiệm thu browser/PWA installability và quét ba QR canonical HTTPS để đóng Task 14.
-3. Hoàn tất push GitHub sau khi người dùng xác nhận cửa sổ đăng nhập tài khoản `hoadz69`; remote đã chọn là `https://github.com/hoadz69/shop-thuc-pham.git`.
+1. Người dùng đăng nhập bằng mật khẩu mới được bàn giao riêng, đổi lại mật khẩu lần nữa và không tái sử dụng mật khẩu cũ; đổi cả tài khoản khác nếu từng dùng chung mật khẩu.
+2. Người dùng kiểm tra chế độ chỉ xem/liên hệ tại `https://thucphamthuytrang.site`; ảnh 12 sản phẩm hiện vẫn là placeholder chung và cần thay bằng ảnh thật trong **Sản phẩm → Tất cả sản phẩm**.
+3. Hoàn tất nghiệm thu PWA installability/quét ba QR canonical HTTPS và push GitHub sau khi xác nhận đăng nhập `hoadz69`.
 
 ## Việc chưa chốt
 
