@@ -7,5 +7,5 @@ Describe 'Scoped deploy' {
         $source | Should -Match 'rollback="/www/backup/site/.+`\$\(date -u \+%Y%m%dT%H%M%SZ\)'
         $source | Should -Not -Match "rollback='/www/backup/site/.+`\$\(date"
     }
-    It 'sets ownership and scoped permissions before activation' { $source.IndexOf('chown -R www:www') | Should -BeLessThan $source.IndexOf('wp $($spec.Activate) activate'); $source | Should -Match 'chmod 775'; $source | Should -Match 'chmod 664' }
+    It 'keeps deployed code read-only to the PHP-FPM user before activation' { $source.IndexOf('chown -R root:www') | Should -BeLessThan $source.IndexOf('wp $($spec.Activate) activate'); $source | Should -Match 'chmod 755'; $source | Should -Match 'chmod 644'; $source | Should -Not -Match 'chown -R www:www' }
 }

@@ -42,11 +42,11 @@ tar -xzf "`$archive" -C "`$stage"
 test -f "`$stage/$($spec.Slug)/$(if ($Component -eq 'Theme') { 'style.css' } elseif ($Component -eq 'ProductQr') { 'tt-product-qr.php' } else { 'tt-pwa.php' })"
 if find "`$stage/$($spec.Slug)" -type l | grep -q .; then printf 'Symlink rejected.\n' >&2; exit 8; fi
 if [ -d "`$target" ]; then tar -czf "`$rollback" -C '$parent' '$($spec.Slug)'; chmod 600 "`$rollback"; fi
-install -d -m 775 -o www -g www "`$target"
+install -d -m 755 -o root -g www "`$target"
 cp -a "`$stage/$($spec.Slug)/." "`$target/"
-chown -R www:www "`$target"
-find "`$target" -type d -exec chmod 775 {} +
-find "`$target" -type f -exec chmod 664 {} +
+chown -R root:www "`$target"
+find "`$target" -type d -exec chmod 755 {} +
+find "`$target" -type f -exec chmod 644 {} +
 find "`$target" -type f -name '*.php' -exec php -l {} \; | grep -v 'No syntax errors detected' && exit 9 || true
 wp $($spec.Activate) activate '$($spec.Slug)' --path='$($config.ProjectWebRoot)' --allow-root
 "@

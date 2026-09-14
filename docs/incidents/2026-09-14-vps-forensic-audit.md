@@ -43,3 +43,8 @@
 6. Reboot trong maintenance window, rồi lặp lại process/network/persistence scan và theo dõi log ít nhất 24–48 giờ.
 7. Nếu cần mức bảo đảm cao nhất, dựng lại VPS từ image Ubuntu sạch và phục hồi site từ code/database/uploads đã kiểm tra.
 
+## Cập nhật khắc phục SSH 2026-09-14
+
+- Đã tạo và xác minh backup website `20260914T082231Z`; cấu hình SSH trước thay đổi được lưu tại `/www/backup/site/thuc-pham-thuy-trang/ssh/20260914T082231Z`.
+- Đã cài `/etc/ssh/sshd_config.d/00-thuytrang-key-only.conf` để giá trị an toàn được đọc trước `50-cloud-init.conf`; giữ nguyên port `2222`, `PubkeyAuthentication yes`, `PermitRootLogin prohibit-password`, tắt `PasswordAuthentication` và keyboard-interactive authentication.
+- `sshd -t` PASS, service vẫn active sau reload, kết nối mới bằng key PASS và phép thử ép password-only bị từ chối. Không thay đổi UFW/firewall hoặc aaPanel.

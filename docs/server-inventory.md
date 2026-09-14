@@ -9,6 +9,7 @@ Khảo sát chỉ đọc ngày 2026-09-09 qua SSH.
 - SSH port: `2222`
 - Host key được ghim khi kết nối: `SHA256:Vkq3xVltsQYnkOzQ5Sow2yEkkURxSPPN1rLdrXsot80`
 - Private key nằm ngoài repository; đường dẫn máy hiện tại lưu trong `config/local.ps1` (Git ignored).
+- Từ 2026-09-14, SSH hiệu lực là public-key only: `PasswordAuthentication no`, `KbdInteractiveAuthentication no`, root chỉ được phép dùng public key; port vẫn giữ nguyên `2222`.
 
 ## Hệ điều hành và dung lượng
 

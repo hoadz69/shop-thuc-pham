@@ -1,10 +1,12 @@
 <?php
-$root = dirname( __DIR__, 2 );
-$home = file_get_contents( $root . '/theme/blocksy-child/inc/home.php' );
-$woo = file_get_contents( $root . '/theme/blocksy-child/inc/woocommerce.php' );
-$settings = file_get_contents( $root . '/theme/blocksy-child/inc/store-settings.php' );
-$footer = file_get_contents( $root . '/theme/blocksy-child/inc/footer.php' );
-$css = file_get_contents( $root . '/theme/blocksy-child/assets/css/site.css' );
+$root = getenv( 'TT_PROJECT_ROOT' ) ?: dirname( __DIR__, 2 );
+$theme_root = getenv( 'TT_THEME_ROOT' ) ?: $root . '/theme/blocksy-child';
+$home = file_get_contents( $theme_root . '/inc/home.php' );
+$woo = file_get_contents( $theme_root . '/inc/woocommerce.php' );
+$settings = file_get_contents( $theme_root . '/inc/store-settings.php' );
+$footer = file_get_contents( $theme_root . '/inc/footer.php' );
+$css = file_get_contents( $theme_root . '/assets/css/site.css' );
+$js = file_get_contents( $theme_root . '/assets/js/site.js' );
 foreach ( array( '<h1>', 'tt-hero', 'tt-promises', 'tt-weekly-grid', 'Thực phẩm tươi sạch mỗi tuần', 'tt-category-products', 'Sản phẩm theo danh mục', 'tt-tips', 'posts_per_page', 'wp_reset_postdata' ) as $needle ) {
 	if ( false === strpos( $home, $needle ) ) { fwrite( STDERR, "Missing $needle\n" ); exit( 1 ); }
 }
@@ -29,5 +31,17 @@ foreach ( array( '@media(max-width:1024px)', '@media(max-width:768px)', '@media(
 }
 foreach ( array( '.tt-topbar', '.tt-featured .woocommerce-loop-product__title a', '.tt-featured .ct-woo-card-actions', '.tt-featured .meta-categories', '.tt-weekly-card', '.tt-mini-product', '.tt-tip-card' ) as $needle ) {
 	if ( false === strpos( $css, $needle ) ) { fwrite( STDERR, "Missing featured-card style $needle\n" ); exit( 1 ); }
+}
+foreach ( array( 'tt-hero-slider', 'tt-hero__slide', 'aria-roledescription="carousel"', 'tt-hero__dots', 'data-tt-slide' ) as $needle ) {
+	if ( false === strpos( $home, $needle ) ) { fwrite( STDERR, "Missing homepage slider markup $needle\n" ); exit( 1 ); }
+}
+foreach ( array( '.tt-hero-slider', '.tt-hero__slide', '.tt-hero__arrow', '.tt-hero__dot', 'prefers-reduced-motion' ) as $needle ) {
+	if ( false === strpos( $css, $needle ) ) { fwrite( STDERR, "Missing homepage slider style $needle\n" ); exit( 1 ); }
+}
+foreach ( array( '[data-tt-slider]', 'setInterval', 'aria-current', 'visibilitychange', 'prefers-reduced-motion' ) as $needle ) {
+	if ( false === strpos( $js, $needle ) ) { fwrite( STDERR, "Missing homepage slider behavior $needle\n" ); exit( 1 ); }
+}
+foreach ( array( 'hero-vegetables-v2.png', 'hero-family-meal-v2.png' ) as $asset ) {
+	if ( ! is_file( $theme_root . '/assets/images/' . $asset ) ) { fwrite( STDERR, "Missing homepage slider asset $asset\n" ); exit( 1 ); }
 }
 echo "PASS\n";

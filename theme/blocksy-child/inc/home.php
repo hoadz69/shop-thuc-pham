@@ -3,7 +3,21 @@ defined( 'ABSPATH' ) || exit;
 
 function tt_homepage_markup() {
 	$shop_url = function_exists( 'wc_get_page_permalink' ) ? wc_get_page_permalink( 'shop' ) : home_url( '/products/' );
-	$hero_url = get_stylesheet_directory_uri() . '/assets/images/hero-fresh-market.png';
+	$image_base = get_stylesheet_directory_uri() . '/assets/images/';
+	$hero_slides = array(
+		array(
+			'image'       => $image_base . 'hero-vegetables-v2.png',
+			'eyebrow'     => __( 'Tươi ngon mỗi ngày', 'thuc-pham-thuy-trang' ),
+			'title'       => __( 'Thực phẩm tươi sạch cho bữa cơm nhà', 'thuc-pham-thuy-trang' ),
+			'description' => __( 'Rau củ theo mùa được chọn lọc kỹ, rõ nguồn và thuận tiện cho thực đơn hằng ngày.', 'thuc-pham-thuy-trang' ),
+		),
+		array(
+			'image'       => $image_base . 'hero-family-meal-v2.png',
+			'eyebrow'     => __( 'Đủ món cho cả nhà', 'thuc-pham-thuy-trang' ),
+			'title'       => __( 'Đi chợ gọn hơn, chọn món dễ hơn', 'thuc-pham-thuy-trang' ),
+			'description' => __( 'Thịt cá, trứng, nấm và đồ khô thiết yếu trong cùng một gian hàng đáng tin cậy.', 'thuc-pham-thuy-trang' ),
+		),
+	);
 	$woocommerce_ready = function_exists( 'wc_get_template_part' ) && function_exists( 'wc_get_product' ) && post_type_exists( 'product' );
 	$category_url = static function ( $slug ) use ( $shop_url ) {
 		$term = get_term_by( 'slug', $slug, 'product_cat' );
@@ -12,12 +26,25 @@ function tt_homepage_markup() {
 	ob_start();
 	?>
 	<div class="tt-home">
-		<section class="tt-hero" style="--tt-hero-image:url('<?php echo esc_url( $hero_url ); ?>')">
-			<div class="tt-shell tt-hero__content">
-				<p class="tt-eyebrow"><?php esc_html_e( 'Tươi ngon mỗi ngày', 'thuc-pham-thuy-trang' ); ?></p>
-				<h1><?php esc_html_e( 'Thực phẩm tươi sạch cho bữa cơm nhà', 'thuc-pham-thuy-trang' ); ?></h1>
-				<p><?php esc_html_e( 'Lựa chọn thực phẩm thiết yếu thuận tiện, rõ giá và giao tận nơi.', 'thuc-pham-thuy-trang' ); ?></p>
-				<div class="tt-actions"><a class="tt-button" href="<?php echo esc_url( $shop_url ); ?>"><?php esc_html_e( 'Mua sắm ngay', 'thuc-pham-thuy-trang' ); ?></a><a class="tt-text-link" href="<?php echo esc_url( home_url( '/gioi-thieu/' ) ); ?>"><?php esc_html_e( 'Câu chuyện của chúng tôi', 'thuc-pham-thuy-trang' ); ?></a></div>
+		<section class="tt-hero-slider" data-tt-slider aria-roledescription="carousel" aria-label="<?php esc_attr_e( 'Ưu đãi và sản phẩm nổi bật', 'thuc-pham-thuy-trang' ); ?>">
+			<div class="tt-hero-slider__track" aria-live="off">
+			<?php foreach ( $hero_slides as $index => $slide ) : ?>
+				<article id="tt-hero-slide-<?php echo esc_attr( $index + 1 ); ?>" class="tt-hero tt-hero__slide<?php echo 0 === $index ? ' is-active' : ''; ?>" data-tt-slide style="--tt-hero-image:url('<?php echo esc_url( $slide['image'] ); ?>')" aria-hidden="<?php echo 0 === $index ? 'false' : 'true'; ?>">
+					<div class="tt-shell tt-hero__content">
+						<p class="tt-eyebrow"><?php echo esc_html( $slide['eyebrow'] ); ?></p>
+						<?php if ( 0 === $index ) : ?><h1><?php else : ?><h2><?php endif; ?><?php echo esc_html( $slide['title'] ); ?><?php if ( 0 === $index ) : ?></h1><?php else : ?></h2><?php endif; ?>
+						<p><?php echo esc_html( $slide['description'] ); ?></p>
+						<div class="tt-actions"><a class="tt-button" href="<?php echo esc_url( $shop_url ); ?>"><?php esc_html_e( 'Xem sản phẩm', 'thuc-pham-thuy-trang' ); ?></a><a class="tt-text-link" href="<?php echo esc_url( home_url( '/gioi-thieu/' ) ); ?>"><?php esc_html_e( 'Về Thủy Trang', 'thuc-pham-thuy-trang' ); ?></a></div>
+					</div>
+				</article>
+			<?php endforeach; ?>
+			</div>
+			<button class="tt-hero__arrow tt-hero__arrow--prev" type="button" data-tt-slider-prev aria-label="<?php esc_attr_e( 'Banner trước', 'thuc-pham-thuy-trang' ); ?>">‹</button>
+			<button class="tt-hero__arrow tt-hero__arrow--next" type="button" data-tt-slider-next aria-label="<?php esc_attr_e( 'Banner tiếp theo', 'thuc-pham-thuy-trang' ); ?>">›</button>
+			<div class="tt-hero__dots" aria-label="<?php esc_attr_e( 'Chọn banner', 'thuc-pham-thuy-trang' ); ?>">
+			<?php foreach ( $hero_slides as $index => $slide ) : ?>
+				<button class="tt-hero__dot<?php echo 0 === $index ? ' is-active' : ''; ?>" type="button" data-tt-slide-to="<?php echo esc_attr( $index ); ?>" aria-controls="tt-hero-slide-<?php echo esc_attr( $index + 1 ); ?>" aria-label="<?php echo esc_attr( sprintf( __( 'Xem banner %d', 'thuc-pham-thuy-trang' ), $index + 1 ) ); ?>" aria-current="<?php echo 0 === $index ? 'true' : 'false'; ?>"></button>
+			<?php endforeach; ?>
 			</div>
 		</section>
 

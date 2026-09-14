@@ -17,6 +17,9 @@ Implementation plan có đúng 14 task. Task 1–13 đã hoàn thành; Task 14 S
 
 ## Phiên đang làm
 
+- Phiên 2026-09-14 (SSH key-only và slider trang chủ): người dùng đã duyệt triển khai bước khóa SSH bằng public key, giữ nguyên port `2222` và không thay đổi firewall/2FA; đồng thời yêu cầu trang chủ có slider tương tự cơ chế hai banner của `thucphamthuytrang.com` nhưng dùng nội dung/tài sản riêng. Trước thay đổi phải tạo và xác minh backup, giữ phiên SSH rollback, kiểm tra `sshd -t`/cấu hình hiệu lực/kết nối key mới, rồi triển khai slider accessible và nghiệm thu desktop/mobile.
+- SSH key-only đã hoàn tất: backup site `20260914T082231Z` (78.199.316 byte) PASS; backup SSH tại `/www/backup/site/thuc-pham-thuy-trang/ssh/20260914T082231Z`. Cấu hình dự án `00-thuytrang-key-only.conf` giữ port `2222`, root qua public key và tắt password/keyboard-interactive; `sshd -t` PASS, reload không lỗi, key login mới PASS và password-only bị từ chối. Không thay đổi firewall, port hoặc 2FA.
+- Slider trang chủ đã deploy với hai ảnh thực phẩm riêng, hai nội dung/CTA, autoplay 6,5 giây, mũi tên/chấm điều hướng, bàn phím, pause khi tương tác và tôn trọng reduced-motion. Pipeline deploy đã sửa để theme/plugin luôn là `root:www` 755/644, không trả quyền ghi code cho PHP. HTML có đúng 2 slide/2 dot/2 arrow; theme PHP smoke PASS, Node syntax PASS, Pester 64/64, smoke All PASS; Playwright desktop xác nhận tự chuyển sang slide 2 và mobile không còn chồng control. Rollback theme `/www/backup/site/thuc-pham-thuy-trang/deploy/20260914T083450Z-blocksy-child.tar.gz`, SHA-256 `5cd574a01490c19a4155fda8697b89ab56dcbcdda3b849330b1cbf39465fa93e`.
 - Phiên 2026-09-14 (đổi mật khẩu quản trị): người dùng yêu cầu đổi mật khẩu WordPress của administrator chính sang giá trị dễ nhớ do người dùng trực tiếp chỉ định. Mật khẩu không được ghi vào Git/tài liệu; tạo và xác minh backup trước khi đổi, sau đó kiểm tra hash đăng nhập. Đồng thời xác nhận SSH root hiện chỉ nhận public key dù `PasswordAuthentication` toàn cục vẫn đang bật.
 - Đổi mật khẩu administrator `qtri_thuytrang` đã hoàn tất theo giá trị người dùng chỉ định mà không ghi secret vào repository/tài liệu. Backup trước thay đổi `20260914T070338Z` (78.156.842 byte) PASS; `wp_check_password()` PASS, toàn bộ session cũ đã hủy, chỉ còn đúng administrator ID 1; storefront HTTP 200 và smoke All PASS. Cảnh báo sendmail thiếu không ảnh hưởng cập nhật password.
 - Phiên 2026-09-14 (đồng bộ GitHub): theo yêu cầu người dùng, commit toàn bộ code/tài liệu an toàn còn ở local, gồm cấu hình canonical domain và script đồng bộ certificate; quét secret và xác nhận config local/backups vẫn ignored trước khi push toàn bộ `main` lên `origin/main`.
@@ -124,9 +127,10 @@ Implementation plan có đúng 14 task. Task 1–13 đã hoàn thành; Task 14 S
 
 ## Bước tiếp theo
 
-1. Sau khi người dùng đồng ý maintenance window: quarantine IOC `/tmp`, rotate database credential, khóa toàn bộ code với owner/quyền đúng, tắt SSH password auth và thu hẹp UFW/aaPanel exposure; reboot rồi audit lại.
-2. Người dùng đăng nhập bằng mật khẩu mới được bàn giao riêng, đổi lại mật khẩu lần nữa và không tái sử dụng mật khẩu cũ; đổi cả tài khoản khác nếu từng dùng chung mật khẩu.
-3. Sau khi đóng sự cố, tiếp tục thay ảnh sản phẩm thật, nghiệm thu PWA/QR và push GitHub.
+1. Cho người dùng kiểm tra slider mới trên production. SSH password auth đã tắt; theo phạm vi đã chốt không thay đổi UFW/aaPanel hoặc bật 2FA.
+2. Khi người dùng duyệt maintenance tiếp: quarantine IOC `/tmp`, rotate database credential và khóa nốt PHP core cấp web-root; reboot rồi audit lại.
+3. Người dùng đăng nhập bằng mật khẩu mới được bàn giao riêng, đổi lại mật khẩu lần nữa và không tái sử dụng mật khẩu cũ; đổi cả tài khoản khác nếu từng dùng chung mật khẩu.
+4. Sau khi đóng sự cố, tiếp tục thay ảnh sản phẩm thật và nghiệm thu PWA/QR.
 
 ## Việc chưa chốt
 
