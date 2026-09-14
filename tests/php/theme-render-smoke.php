@@ -32,13 +32,13 @@ foreach ( array( '@media(max-width:1024px)', '@media(max-width:768px)', '@media(
 foreach ( array( '.tt-topbar', '.tt-featured .woocommerce-loop-product__title a', '.tt-featured .ct-woo-card-actions', '.tt-featured .meta-categories', '.tt-weekly-card', '.tt-mini-product', '.tt-tip-card' ) as $needle ) {
 	if ( false === strpos( $css, $needle ) ) { fwrite( STDERR, "Missing featured-card style $needle\n" ); exit( 1 ); }
 }
-foreach ( array( 'tt-hero-slider', 'tt-hero__slide', 'aria-roledescription="carousel"', 'tt-hero__dots', 'data-tt-slide' ) as $needle ) {
+foreach ( array( 'tt-hero-slider', 'tt-hero__slide', 'tt-hero__media', 'loading="eager"', 'aria-roledescription="carousel"', 'tt-hero__dots', 'data-tt-slide' ) as $needle ) {
 	if ( false === strpos( $home, $needle ) ) { fwrite( STDERR, "Missing homepage slider markup $needle\n" ); exit( 1 ); }
 }
 foreach ( array( '.tt-hero-slider', '.tt-hero__slide', '.tt-hero__arrow', '.tt-hero__dot', 'prefers-reduced-motion' ) as $needle ) {
 	if ( false === strpos( $css, $needle ) ) { fwrite( STDERR, "Missing homepage slider style $needle\n" ); exit( 1 ); }
 }
-foreach ( array( '[data-tt-slider]', 'setInterval', 'aria-current', 'visibilitychange', 'prefers-reduced-motion' ) as $needle ) {
+foreach ( array( '[data-tt-slider]', 'setInterval', '10000', 'aria-current', 'visibilitychange', 'prefers-reduced-motion' ) as $needle ) {
 	if ( false === strpos( $js, $needle ) ) { fwrite( STDERR, "Missing homepage slider behavior $needle\n" ); exit( 1 ); }
 }
 foreach ( array( 'hero-vegetables-v2.png', 'hero-family-meal-v2.png' ) as $asset ) {

@@ -29,7 +29,8 @@ function tt_homepage_markup() {
 		<section class="tt-hero-slider" data-tt-slider aria-roledescription="carousel" aria-label="<?php esc_attr_e( 'Ưu đãi và sản phẩm nổi bật', 'thuc-pham-thuy-trang' ); ?>">
 			<div class="tt-hero-slider__track" aria-live="off">
 			<?php foreach ( $hero_slides as $index => $slide ) : ?>
-				<article id="tt-hero-slide-<?php echo esc_attr( $index + 1 ); ?>" class="tt-hero tt-hero__slide<?php echo 0 === $index ? ' is-active' : ''; ?>" data-tt-slide style="--tt-hero-image:url('<?php echo esc_url( $slide['image'] ); ?>')" aria-hidden="<?php echo 0 === $index ? 'false' : 'true'; ?>">
+				<article id="tt-hero-slide-<?php echo esc_attr( $index + 1 ); ?>" class="tt-hero tt-hero__slide<?php echo 0 === $index ? ' is-active' : ''; ?>" data-tt-slide aria-hidden="<?php echo 0 === $index ? 'false' : 'true'; ?>">
+					<img class="tt-hero__media" src="<?php echo esc_url( $slide['image'] ); ?>" alt="" width="2048" height="768" loading="eager" decoding="async" fetchpriority="<?php echo 0 === $index ? 'high' : 'auto'; ?>">
 					<div class="tt-shell tt-hero__content">
 						<p class="tt-eyebrow"><?php echo esc_html( $slide['eyebrow'] ); ?></p>
 						<?php if ( 0 === $index ) : ?><h1><?php else : ?><h2><?php endif; ?><?php echo esc_html( $slide['title'] ); ?><?php if ( 0 === $index ) : ?></h1><?php else : ?></h2><?php endif; ?>
