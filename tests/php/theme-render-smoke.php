@@ -38,6 +38,9 @@ foreach ( array( 'tt-hero-slider', 'tt-hero__slide', 'tt-hero__media', 'loading=
 foreach ( array( '.tt-hero-slider', '.tt-hero__slide', '.tt-hero__arrow', '.tt-hero__dot', 'prefers-reduced-motion' ) as $needle ) {
 	if ( false === strpos( $css, $needle ) ) { fwrite( STDERR, "Missing homepage slider style $needle\n" ); exit( 1 ); }
 }
+foreach ( array( 'width:min(100%,1440px)', 'translate3d(-50%,0,0)', 'mask-image:linear-gradient', 'max-width:100vw' ) as $needle ) {
+	if ( false === strpos( $css, $needle ) ) { fwrite( STDERR, "Missing centered homepage slider stage $needle\n" ); exit( 1 ); }
+}
 foreach ( array( '[data-tt-slider]', 'setInterval', '10000', 'aria-current', 'visibilitychange', 'prefers-reduced-motion' ) as $needle ) {
 	if ( false === strpos( $js, $needle ) ) { fwrite( STDERR, "Missing homepage slider behavior $needle\n" ); exit( 1 ); }
 }
