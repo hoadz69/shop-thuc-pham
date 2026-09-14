@@ -41,7 +41,7 @@ foreach ( array( '.tt-hero-slider', '.tt-hero__slide', '.tt-hero__arrow', '.tt-h
 foreach ( array( '[data-tt-slider]', 'setInterval', '10000', 'aria-current', 'visibilitychange', 'prefers-reduced-motion' ) as $needle ) {
 	if ( false === strpos( $js, $needle ) ) { fwrite( STDERR, "Missing homepage slider behavior $needle\n" ); exit( 1 ); }
 }
-foreach ( array( 'hero-vegetables-v2.png', 'hero-family-meal-v2.png' ) as $asset ) {
+foreach ( array( 'hero-vegetables-centered-v3.png', 'hero-family-meal-centered-v3.png' ) as $asset ) {
 	if ( ! is_file( $theme_root . '/assets/images/' . $asset ) ) { fwrite( STDERR, "Missing homepage slider asset $asset\n" ); exit( 1 ); }
 }
 echo "PASS\n";

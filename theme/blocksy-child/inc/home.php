@@ -6,13 +6,13 @@ function tt_homepage_markup() {
 	$image_base = get_stylesheet_directory_uri() . '/assets/images/';
 	$hero_slides = array(
 		array(
-			'image'       => $image_base . 'hero-vegetables-v2.png',
+			'image'       => $image_base . 'hero-vegetables-centered-v3.png',
 			'eyebrow'     => __( 'Tươi ngon mỗi ngày', 'thuc-pham-thuy-trang' ),
 			'title'       => __( 'Thực phẩm tươi sạch cho bữa cơm nhà', 'thuc-pham-thuy-trang' ),
 			'description' => __( 'Rau củ theo mùa được chọn lọc kỹ, rõ nguồn và thuận tiện cho thực đơn hằng ngày.', 'thuc-pham-thuy-trang' ),
 		),
 		array(
-			'image'       => $image_base . 'hero-family-meal-v2.png',
+			'image'       => $image_base . 'hero-family-meal-centered-v3.png',
 			'eyebrow'     => __( 'Đủ món cho cả nhà', 'thuc-pham-thuy-trang' ),
 			'title'       => __( 'Đi chợ gọn hơn, chọn món dễ hơn', 'thuc-pham-thuy-trang' ),
 			'description' => __( 'Thịt cá, trứng, nấm và đồ khô thiết yếu trong cùng một gian hàng đáng tin cậy.', 'thuc-pham-thuy-trang' ),
