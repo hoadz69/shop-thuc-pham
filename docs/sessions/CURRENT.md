@@ -17,6 +17,8 @@ Implementation plan có đúng 14 task. Task 1–13 đã hoàn thành; Task 14 S
 
 ## Phiên đang làm
 
+- Phiên 2026-09-14 (forensic VPS sau xâm nhập WordPress): người dùng yêu cầu xác minh máy chủ có bị chiếm quyền hệ điều hành, cài persistence/mã độc hoặc đào coin hay không. Phạm vi khảo sát chỉ đọc gồm process/resource, network/listening ports, login/SSH/users, cron/systemd, file thực thi mới ở thư mục tạm, package integrity và IOC miner/backdoor; chỉ thay đổi nếu có bằng chứng và sau backup.
+- Audit VPS chỉ đọc 2026-09-14 hoàn tất: xác nhận Alfa webshell từng có command execution dưới user `www`, nhưng chưa thấy bằng chứng root compromise hoặc đào coin. CPU idle 98–100%; không có miner/process/container/pool connection, cron/systemd/LD_PRELOAD/SUID/kernel-module persistence lạ. SSH accepted chỉ là public key từ IP quản trị và authorized_keys vẫn đúng một key cũ; Fail2ban đang chặn brute force. Còn hai IOC bất hoạt trong `/tmp`, database password phải coi là có khả năng lộ, PHP core ở web-root vẫn writable bởi `www`, SSH password auth và nhiều UFW port dư còn mở. Chưa thay đổi server trong audit này; báo cáo/khuyến nghị tại `docs/incidents/2026-09-14-vps-forensic-audit.md`; commit mới nhất xem `git log -1`.
 - Phiên 2026-09-14 (ứng cứu giao diện/sự cố bảo mật): trang chủ production trả fatal tại `blocksy-child/inc/home.php:65` vì WooCommerce không còn được nạp. Khảo sát chỉ đọc phát hiện toàn bộ plugin dự án/WooCommerce đã bị xóa, `wp-file-manager` 8.0.4 lạ là plugin duy nhất active, tài khoản administrator lạ `gujzamuw` (ID 3) được tạo lúc 2026-09-14 01:16:17 và WordPress core checksum thất bại với nhiều file PHP lạ trong `wp-admin`/`wp-includes`. Mục tiêu phiên: tạo và xác minh backup forensic trước thay đổi; làm sạch chính xác IOC, cài lại core/plugin từ nguồn chuẩn, vô hiệu hóa tài khoản/session lạ, thêm guard tránh homepage fatal khi WooCommerce thiếu, deploy có rollback và kiểm thử lại giao diện/QR/PWA.
 - Ứng cứu 2026-09-14 đã hoàn tất: backup forensic `20260914T041509Z` (70.846.118 byte) PASS; IOC/File Manager được quarantine ngoài web root; WordPress 7.1, Blocksy 2.1.56 và WooCommerce 11.1.0 cài lại từ nguồn chính thức; child theme/QR/PWA deploy lại từ Git. Core + Woo checksum PASS, chỉ còn administrator hợp lệ ID 1 và ba plugin dự án mong muốn active. Mật khẩu admin/salts đã xoay, tài khoản lạ ID 3 và test ID 2 đã xóa, dashboard file editor bị tắt, code chuyển sang owner `root:www`, Nginx chặn PHP trong uploads. Guard homepage đã thêm để thiếu WooCommerce không còn làm fatal. Pester 64/64, PHP smoke 3/3, smoke All PASS; Playwright 1440/390px HTTP 200, đủ 4 card/footer, mobile không overflow. Báo cáo: `docs/incidents/2026-09-14-wordpress-compromise.md`; commit mới nhất xem `git log -1`.
 - Phiên 2026-09-11 (favicon trong suốt): người dùng phản hồi favicon mark logo còn nền trắng do bước render SVG sang PNG. Đã xuất lại PNG có alpha trong suốt, kiểm tra pixel góc, dùng attachment/URL mới tránh cache và xác minh favicon public.
@@ -114,13 +116,13 @@ Implementation plan có đúng 14 task. Task 1–13 đã hoàn thành; Task 14 S
 - WP-CLI 2.12.0 đã cài; backup baseline/full và rollback deploy được lưu ngoài web root dưới /www/backup/site/thuc-pham-thuy-trang.
 - Website chạy WordPress 7.1, Blocksy child, WooCommerce với 12 sản phẩm mẫu và hiện không có đơn hàng.
 - Website đang ở catalog-only tạm thời: sản phẩm chỉ xem/liên hệ, add-to-cart bị chặn; cấu hình cart/checkout/COD được giữ để bật lại khi cần.
-- Website đã phục hồi sau sự cố 2026-09-14; core/Woo checksum PASS, code không writable bởi PHP-FPM và uploads không được phép thực thi PHP.
+- Website đã phục hồi sau sự cố 2026-09-14; core/Woo checksum PASS; `wp-admin`/`wp-includes`/theme/plugin không writable bởi PHP-FPM và uploads không được phép thực thi PHP. PHP core ở web-root vẫn cần harden tiếp.
 
 ## Bước tiếp theo
 
-1. Người dùng đăng nhập bằng mật khẩu mới được bàn giao riêng, đổi lại mật khẩu lần nữa và không tái sử dụng mật khẩu cũ; đổi cả tài khoản khác nếu từng dùng chung mật khẩu.
-2. Người dùng kiểm tra chế độ chỉ xem/liên hệ tại `https://thucphamthuytrang.site`; ảnh 12 sản phẩm hiện vẫn là placeholder chung và cần thay bằng ảnh thật trong **Sản phẩm → Tất cả sản phẩm**.
-3. Hoàn tất nghiệm thu PWA installability/quét ba QR canonical HTTPS và push GitHub sau khi xác nhận đăng nhập `hoadz69`.
+1. Sau khi người dùng đồng ý maintenance window: quarantine IOC `/tmp`, rotate database credential, khóa toàn bộ code với owner/quyền đúng, tắt SSH password auth và thu hẹp UFW/aaPanel exposure; reboot rồi audit lại.
+2. Người dùng đăng nhập bằng mật khẩu mới được bàn giao riêng, đổi lại mật khẩu lần nữa và không tái sử dụng mật khẩu cũ; đổi cả tài khoản khác nếu từng dùng chung mật khẩu.
+3. Sau khi đóng sự cố, tiếp tục thay ảnh sản phẩm thật, nghiệm thu PWA/QR và push GitHub.
 
 ## Việc chưa chốt
 

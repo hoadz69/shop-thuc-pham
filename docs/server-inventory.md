@@ -58,7 +58,7 @@ PHP CLI báo một số module đã được nạp lặp (`OPcache`, `zip`, `mbs
 - WordPress 7.1 và WooCommerce 11.1.0 đã được cài lại từ WordPress.org; checksum cả hai PASS.
 - Plugin active: WooCommerce, `tt-product-qr`, `tt-pwa`; plugin File Manager lạ đã bị cô lập ngoài web root.
 - Chỉ còn một administrator hợp lệ là `qtri_thuytrang`; mật khẩu và salts đã được xoay.
-- Core/theme/plugin không writable bởi PHP-FPM user `www`; uploads vẫn writable nhưng Nginx từ chối thực thi PHP/PHTML/PHAR trong uploads.
+- `wp-admin`, `wp-includes`, theme/plugin không writable bởi PHP-FPM user `www`; uploads vẫn writable nhưng Nginx từ chối thực thi PHP/PHTML/PHAR trong uploads. PHP core ở web-root vẫn writable và được ghi nhận là việc hardening cần làm tiếp.
 - Backup forensic đầy đủ UTC `20260914T041509Z` đã xác minh PASS và có bản ngoài VPS.
 
 ## Cần xác minh trước triển khai

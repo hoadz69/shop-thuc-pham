@@ -33,7 +33,7 @@ Danh sách file và nội dung đầy đủ được bảo toàn trong backup fo
 4. Xóa administrator lạ ID 3 và tài khoản test tạm ID 2; cả hai không có post để reassign.
 5. Đổi mật khẩu administrator chính, shuffle toàn bộ WordPress salts và vô hiệu hóa mọi session cũ.
 6. Bật `DISALLOW_FILE_EDIT` và `FORCE_SSL_ADMIN` trong `wp-config.php`.
-7. Chuyển owner của core/theme/plugin sang `root:www`, chỉ giữ uploads writable bởi `www`.
+7. Chuyển owner của `wp-admin`, `wp-includes`, theme/plugin sang `root:www`, chỉ giữ uploads writable bởi `www`. Audit sau đó phát hiện PHP core ở web-root vẫn writable và cần harden tiếp.
 8. Chặn thực thi `php`, `phpN`, `phtml`, `phar` dưới `/wp-content/uploads/` bằng Nginx; `nginx -t` PASS trước reload.
 9. Thêm guard trong homepage để không fatal nếu WooCommerce bị thiếu/tắt trong tương lai.
 
@@ -54,4 +54,3 @@ Danh sách file và nội dung đầy đủ được bảo toàn trong backup fo
 - Không tái sử dụng mật khẩu cũ; bật 2FA nếu bổ sung giải pháp phù hợp.
 - Đổi mật khẩu các tài khoản khác nếu từng dùng chung mật khẩu với WordPress (email, aaPanel, registrar).
 - Không cài plugin File Manager trong WordPress; tiếp tục deploy code qua repository/SSH có backup.
-
